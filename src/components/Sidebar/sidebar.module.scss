@@ -1,11 +1,41 @@
 .sidebar {
-  outline: 1px solid tomato;
   padding: 10px;
   width: 260px;
   min-height: 400px;
+  font-size: 18px;
+  background: #fff;
+
+  padding-top: 23px;
+  padding-left: 17px;
+  padding-right: 15px;
+  box-shadow: 0px 2px 15px 1px rgba(0, 0, 0, 0.47);
+
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .nav {
   display: flex;
   flex-direction: column;
+}
+.link {
+  color: #697a8d;
+  padding-left: 15px;
+  padding-right: 13px;
+  padding-top: 8px;
+  padding-bottom: 9px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.activeLink {
+  composes: link;
+  color: #000;
+  background-color: #696cff;
+  opacity: 0.5;
+}
+
+.link:hover {
+  color: #000;
 }

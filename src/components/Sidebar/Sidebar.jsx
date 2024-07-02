@@ -5,11 +5,24 @@ const Sidebar = () => {
   return (
     <div className={css.sidebar}>
       <nav className={css.nav}>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/signup">Signup</NavLink>
-        <NavLink to="/signin">Signin</NavLink>
-        <NavLink to="/companies">Сompanies</NavLink>
-        <NavLink to="/users">Users</NavLink>
+        <NavLink
+          to="/companies"
+          className={({ isActive }) => (isActive ? css.activeLink : css.link)}
+        >
+          Сompanies
+        </NavLink>
+        <NavLink
+          to="/users"
+          className={({ isActive }) => (isActive ? css.activeLink : css.link)}
+        >
+          Users
+        </NavLink>
+        <NavLink
+          to="/auth"
+          className={({ isActive }) => (isActive ? css.activeLink : css.link)}
+        >
+          Auth
+        </NavLink>
       </nav>
     </div>
   )

@@ -1,0 +1,20 @@
+.tools {
+  display: flex;
+
+  width: 40%;
+}
+
+.toolsBigHead {
+  height: 50px;
+  width: 50px;
+  margin-top: -4px;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.2, 1.2);
+  }
+}
+.toolsCurrentPage {
+  text-transform: capitalize;
+}

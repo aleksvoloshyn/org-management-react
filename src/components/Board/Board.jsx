@@ -1,17 +1,20 @@
+import { Route, Routes } from 'react-router-dom'
+import CompaniesPage from './../../pages/CompaniesPage/'
+import Toolbar from '../Toolbar/Toolbar'
 import css from './board.module.scss'
-
-// import Container from '../Container'
-// import Sidebar from '../Sidebar/Sidebar'
+import UsersPage from './../../pages/UsersPage'
+import NotFoundPage from './../../pages/NotFoundPage'
 
 const Board = () => {
   return (
     <div className={css.board}>
-      {' '}
-      {/* <Container>
-        <Sidebar />
-        <Board />
-      </Container> */}
-      <h2>board</h2>{' '}
+      <Toolbar />
+      <Routes>
+        <Route path="/companies" element={<CompaniesPage />} />
+        <Route path="/users" element={<UsersPage />} />
+        <Route path="/*" element={<NotFoundPage />} />
+        <Route path="/not-found" element={<NotFoundPage />} />
+      </Routes>
     </div>
   )
 }

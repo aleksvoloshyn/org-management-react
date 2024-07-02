@@ -1,0 +1,24 @@
+.searchBar {
+  color: #a1acb8;
+  fill: #a1acb8;
+  outline: 1px solid lavender;
+  border-radius: 8px;
+  padding: 10px;
+  width: 50%;
+}
+
+.searchLogo {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  margin-top: 4px;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+}
+
+.searchLabel {
+  display: flex;
+}

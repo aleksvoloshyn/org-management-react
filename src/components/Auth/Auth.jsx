@@ -3,6 +3,7 @@ import SignUp from './../SignUp'
 import SignIn from './../SignIn'
 import css from './auth.module.scss'
 import { Route, Routes } from 'react-router-dom'
+import NotFoundPage from '../../pages/NotFoundPage'
 
 const Auth = () => {
   return (
@@ -10,6 +11,7 @@ const Auth = () => {
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </div>
   )
