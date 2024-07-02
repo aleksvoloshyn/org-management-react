@@ -12,7 +12,7 @@ const Searchbar = () => {
         <input
           className={css.searchInput}
           type="text"
-          placeholder="Search (Ctrl+/)"
+          placeholder="Search "
           // value={}
           // onChange={}
           name="login"

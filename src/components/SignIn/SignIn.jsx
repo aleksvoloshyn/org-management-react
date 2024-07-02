@@ -2,6 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { Button, TextField, Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useAddSigninMutation } from './../../redux/authSlice' // Предположим, что здесь находится ваш хук для отправки данных
 
 import css from './signIn.module.scss'
 
@@ -12,6 +13,24 @@ const validationSchema = Yup.object({
 
 const SignIn = () => {
   const navigate = useNavigate()
+  const [addSignin] = useAddSigninMutation() // Хук для отправки данных регистрации
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const { data } = await addSignin(values) // Вызов мутации для отправки данных и получения ответа
+      if (data && data.token) {
+        const token = data.token // Получаем токен из ответа
+        localStorage.setItem('token', data.token)
+        console.log('Token:', token) // Выводим токен в консоль (можете использовать его далее по необходимости)
+        navigate('/') // Переход на главную страницу после успешной авторизации
+      } else {
+        console.error('Sign in error: Token not found in response')
+      }
+    } catch (error) {
+      console.error('Sign in error:', error)
+    } finally {
+      setSubmitting(false)
+    }
+  }
   return (
     // <Box sx={{ maxWidth: 380, mx: 'auto', mt: 3 }}>
     <Box className={css.signIn}>
@@ -19,12 +38,7 @@ const SignIn = () => {
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            console.log(values)
-            setSubmitting(false)
-          }, 400)
-        }}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
           <Form className={css.signinInputForm}>

@@ -1,0 +1,30 @@
+.companiesPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.addCompanyForm {
+  max-width: 600px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.modalBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  box-shadow: 24px;
+  padding: 20px;
+  outline: none;
+}
+
+.dataGridBox {
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 20px;
+}
