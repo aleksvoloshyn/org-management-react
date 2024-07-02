@@ -2,7 +2,9 @@
 
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { Button, TextField, Box, Typography } from '@mui/material'
+import { Button, TextField, Box } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+import css from './signup.module.scss'
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email format').required('Required'),
@@ -16,11 +18,10 @@ const validationSchema = Yup.object({
 })
 
 const SignUp = () => {
+  const navigate = useNavigate()
   return (
-    <Box sx={{ maxWidth: 400, mx: 'auto', mt: 4 }}>
-      <Typography variant="h4" mb={2}>
-        Sign Up
-      </Typography>
+    <Box className={css.signUp}>
+      <h3 className={css.signUpTitle}>Sign Up</h3>
       <Formik
         initialValues={{
           email: '',
@@ -50,6 +51,7 @@ const SignUp = () => {
               margin="normal"
               helperText={<ErrorMessage name="email" />}
               error={Boolean(<ErrorMessage name="email" />)}
+              className={css.signUpInput}
             />
             <Field
               name="password"
@@ -60,6 +62,7 @@ const SignUp = () => {
               margin="normal"
               helperText={<ErrorMessage name="password" />}
               error={Boolean(<ErrorMessage name="password" />)}
+              className={css.signUpInput}
             />
             <Field
               name="phone_number"
@@ -69,6 +72,7 @@ const SignUp = () => {
               margin="normal"
               helperText={<ErrorMessage name="phone_number" />}
               error={Boolean(<ErrorMessage name="phone_number" />)}
+              className={css.signUpInput}
             />
             <Field
               name="last_name"
@@ -78,6 +82,7 @@ const SignUp = () => {
               margin="normal"
               helperText={<ErrorMessage name="last_name" />}
               error={Boolean(<ErrorMessage name="last_name" />)}
+              className={css.signUpInput}
             />
             <Field
               name="first_name"
@@ -87,6 +92,7 @@ const SignUp = () => {
               margin="normal"
               helperText={<ErrorMessage name="first_name" />}
               error={Boolean(<ErrorMessage name="first_name" />)}
+              className={css.signUpInput}
             />
             <Field
               name="nick_name"
@@ -96,6 +102,7 @@ const SignUp = () => {
               margin="normal"
               helperText={<ErrorMessage name="nick_name" />}
               error={Boolean(<ErrorMessage name="nick_name" />)}
+              className={css.signUpInput}
             />
             <Field
               name="description"
@@ -105,6 +112,7 @@ const SignUp = () => {
               margin="normal"
               helperText={<ErrorMessage name="description" />}
               error={Boolean(<ErrorMessage name="description" />)}
+              className={css.signUpInput}
             />
             <Field
               name="position"
@@ -114,6 +122,7 @@ const SignUp = () => {
               margin="normal"
               helperText={<ErrorMessage name="position" />}
               error={Boolean(<ErrorMessage name="position" />)}
+              className={css.signUpInput}
             />
             <Button
               type="submit"
@@ -121,9 +130,22 @@ const SignUp = () => {
               variant="contained"
               color="primary"
               fullWidth
+              className={css.signUpButton}
+              sx={{ mt: '80px' }}
             >
               Sign Up
-            </Button>
+            </Button>{' '}
+            <p className={css.signUpRedirect}>
+              Already Have An Account?
+              <span
+                className={css.signUpRedirectLink}
+                onClick={() => {
+                  navigate('../')
+                }}
+              >
+                Log In
+              </span>
+            </p>
           </Form>
         )}
       </Formik>

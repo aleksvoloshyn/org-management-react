@@ -1,0 +1,49 @@
+.signUp {
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  min-height: 500px;
+  padding: 20px;
+  margin: 0 auto;
+  border-radius: 12px;
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+}
+
+.signUpTitle {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -4%;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.signUpInputForm {
+  display: flex;
+  flex-direction: column;
+}
+.signUpInputSpan {
+  margin-bottom: 60px;
+}
+.signUpInput {
+  width: 382px;
+}
+
+.signUpButton {
+  margin-top: 120px;
+  height: 52px;
+  border-radius: 15.56px;
+}
+
+.signUpRedirect {
+  font-size: 14px;
+  margin-top: 20px;
+  letter-spacing: 1%;
+}
+.signUpRedirectLink {
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 6px;
+  color: #1976d2;
+}

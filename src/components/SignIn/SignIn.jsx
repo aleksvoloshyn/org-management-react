@@ -1,6 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { Button, TextField, Box, Typography } from '@mui/material'
+import { Button, TextField, Box } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
+
+import css from './signIn.module.scss'
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email format').required('Required'),
@@ -8,11 +11,11 @@ const validationSchema = Yup.object({
 })
 
 const SignIn = () => {
+  const navigate = useNavigate()
   return (
-    <Box sx={{ maxWidth: 400, mx: 'auto', mt: 4 }}>
-      <Typography variant="h4" mb={2}>
-        Sign In
-      </Typography>
+    // <Box sx={{ maxWidth: 380, mx: 'auto', mt: 3 }}>
+    <Box className={css.signIn}>
+      <h3 className={css.signinTitle}>Sign In</h3>
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
@@ -24,35 +27,53 @@ const SignIn = () => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form>
-            <Field
-              name="email"
-              as={TextField}
-              label="Email"
-              fullWidth
-              margin="normal"
-              helperText={<ErrorMessage name="email" />}
-              error={Boolean(<ErrorMessage name="email" />)}
-            />
-            <Field
-              name="password"
-              as={TextField}
-              label="Password"
-              type="password"
-              fullWidth
-              margin="normal"
-              helperText={<ErrorMessage name="password" />}
-              error={Boolean(<ErrorMessage name="password" />)}
-            />
+          <Form className={css.signinInputForm}>
+            <span className={css.signinInputSpan}>
+              {' '}
+              <Field
+                name="email"
+                as={TextField}
+                fullWidth
+                label="Email"
+                helperText={<ErrorMessage name="email" />}
+                error={Boolean(<ErrorMessage name="email" />)}
+                className={css.signinInput}
+              />
+              <Field
+                name="password"
+                as={TextField}
+                label="Password"
+                type="password"
+                margin="normal"
+                fullWidth
+                helperText={<ErrorMessage name="password" />}
+                error={Boolean(<ErrorMessage name="password" />)}
+                className={css.signinInput}
+              />
+            </span>
+
             <Button
               type="submit"
               disabled={isSubmitting}
               variant="contained"
               color="primary"
               fullWidth
+              className={css.signInButton}
             >
               Sign In
             </Button>
+
+            <p className={css.signInRedirect}>
+              Create A New Account?{' '}
+              <span
+                className={css.signInRedirectLink}
+                onClick={() => {
+                  navigate('./signup')
+                }}
+              >
+                Sign Up
+              </span>
+            </p>
           </Form>
         )}
       </Formik>

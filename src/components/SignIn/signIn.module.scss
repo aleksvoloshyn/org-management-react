@@ -1,0 +1,49 @@
+.signIn {
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  min-height: 500px;
+  padding: 20px;
+  margin: 0 auto;
+  border-radius: 12px;
+  background-color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+}
+
+.signinTitle {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -4%;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.signinInputForm {
+  display: flex;
+  flex-direction: column;
+}
+.signinInputSpan {
+  margin-bottom: 60px;
+}
+.signinInput {
+  width: 382px;
+}
+
+.signInButton {
+  margin-top: 120px;
+
+  height: 52px;
+  border-radius: 15.56px;
+}
+
+.signInRedirect {
+  font-size: 14px;
+  margin-top: 20px;
+  letter-spacing: 1%;
+}
+.signInRedirectLink {
+  font-weight: 600;
+  color: #1976d2;
+  cursor: pointer;
+}
