@@ -13,7 +13,7 @@ const HomePage = () => {
     if (!validPaths.includes(location.pathname)) {
       navigate('/not-found')
     }
-  }, [navigate]) // Зависимости useEffect
+  }, [navigate])
   return (
     <div className={css.homePage}>
       <Sidebar />

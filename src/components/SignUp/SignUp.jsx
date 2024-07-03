@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { Button, TextField, Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useAddSignupMutation } from './../../redux/authSlice'
 import css from './signup.module.scss'
 
 const validationSchema = Yup.object({
@@ -19,6 +20,19 @@ const validationSchema = Yup.object({
 
 const SignUp = () => {
   const navigate = useNavigate()
+  const [addSignup] = useAddSignupMutation()
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      await addSignup(values).unwrap()
+      console.log('Registration successful!')
+      console.log(values)
+      setSubmitting(false)
+      navigate('../') // Redirect to login page after successful registration
+    } catch (error) {
+      console.error('Failed to register:', error)
+      setSubmitting(false)
+    }
+  }
   return (
     <Box className={css.signUp}>
       <h3 className={css.signUpTitle}>Sign Up</h3>
@@ -34,12 +48,7 @@ const SignUp = () => {
           position: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            console.log(values)
-            setSubmitting(false)
-          }, 400)
-        }}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
           <Form>

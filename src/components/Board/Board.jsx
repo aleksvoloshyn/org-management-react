@@ -12,7 +12,7 @@ const Board = () => {
       <Routes>
         <Route path="/companies" element={<CompaniesPage />} />
         <Route path="/users" element={<UsersPage />} />
-        <Route path="/*" element={<NotFoundPage />} />
+        {/* <Route path="/*" element={<NotFoundPage />} /> */}
         <Route path="/not-found" element={<NotFoundPage />} />
       </Routes>
     </div>
