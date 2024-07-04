@@ -9,7 +9,7 @@ const HomePage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const validPaths = ['/', '/companies', '/users']
+    const validPaths = ['/', '/companies', '/users/userslist', '/profile']
     if (!validPaths.includes(location.pathname)) {
       navigate('/not-found')
     }

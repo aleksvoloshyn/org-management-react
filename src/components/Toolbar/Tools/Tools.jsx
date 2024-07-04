@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { useLogoutMutation } from './../../../redux/authSlice'
-import { companiesApi } from '../../../redux/companiesSlice'
-import { authApi } from '../../../redux/authSlice'
-import { currentApiSlice } from './../../../redux/userSlice'
+import { useLogoutMutation } from '../../../redux/authLogoutApi'
+import { companiesApi } from '../../../redux/companiesApi'
+import { authApi } from '../../../redux/authApi'
+import { usersApi } from '../../../redux/usersApi'
 import css from './tools.module.scss'
 
 const Tools = () => {
-  const location = useLocation() // Получаем текущий путь
+  const location = useLocation()
   const [currentPage, setCurrentPage] = useState(location.pathname.slice(1))
 
   const dispatch = useDispatch()
@@ -22,15 +22,19 @@ const Tools = () => {
       localStorage.removeItem('token')
       dispatch(companiesApi.util.resetApiState())
       dispatch(authApi.util.resetApiState())
-      dispatch(currentApiSlice.util.resetApiState())
-      navigate('../auth') // Перенаправление на страницу входа после выхода
+      dispatch(usersApi.util.resetApiState())
+      navigate('../auth')
     } catch (error) {
       console.error('Failed to logout:', error)
     }
   }
 
   useEffect(() => {
-    setCurrentPage(location.pathname.slice(1))
+    setCurrentPage(
+      location.pathname.includes('/')
+        ? location.pathname.split('/').pop()
+        : location.pathname
+    )
   }, [location.pathname])
   return (
     <div className={css.tools}>

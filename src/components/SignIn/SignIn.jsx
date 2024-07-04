@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { Button, TextField, Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import { useAddSigninMutation } from './../../redux/authSlice' // Предположим, что здесь находится ваш хук для отправки данных
+import { useAddSigninMutation } from '../../redux/authApi' // Предположим, что здесь находится ваш хук для отправки данных
 
 import css from './signIn.module.scss'
 

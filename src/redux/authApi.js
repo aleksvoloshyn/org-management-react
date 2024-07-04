@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { currentApiSlice } from './userSlice'
 
 export const authApi = createApi({
   reducerPath: 'auth',
@@ -8,6 +7,7 @@ export const authApi = createApi({
   }),
   tagTypes: ['Auth'],
   endpoints: (builder) => ({
+    // LOGIN (SignIn)
     addSignin: builder.mutation({
       query: (values) => ({
         url: `/auth/signin`,
@@ -16,7 +16,7 @@ export const authApi = createApi({
       }),
       invalidatesTags: ['Auth', 'CurrentUser'],
     }),
-
+    // REGISTER (SignUp)
     addSignup: builder.mutation({
       query: (values) => ({
         url: `/auth/signup`,
@@ -25,24 +25,7 @@ export const authApi = createApi({
       }),
       invalidatesTags: ['Auth'],
     }),
-    // LOGOUT
-    logout: builder.mutation({
-      query: () => ({
-        url: `/auth/logout`,
-        method: 'POST',
-      }),
-      invalidatesTags: ['Auth', 'CurrentUser'],
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled
-          dispatch(currentApiSlice.util.resetApiState()) // Сброс состояния текущего пользователя
-        } catch {
-          // Обработка ошибок
-        }
-      },
-    }),
   }),
 })
 
-export const { useAddSigninMutation, useAddSignupMutation, useLogoutMutation } =
-  authApi
+export const { useAddSigninMutation, useAddSignupMutation } = authApi

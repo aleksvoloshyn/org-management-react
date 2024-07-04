@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { Button, TextField, Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import { useAddSignupMutation } from './../../redux/authSlice'
+import { useAddSignupMutation } from '../../redux/authApi'
 import css from './signup.module.scss'
 
 const validationSchema = Yup.object({

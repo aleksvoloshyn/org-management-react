@@ -6,7 +6,7 @@ import {
   useAddCompanyMutation,
   useUpdateCompanyMutation,
   useDeleteCompanyMutation,
-} from '../../redux/companiesSlice'
+} from '../../redux/companiesApi'
 import {
   Button,
   TextField,
@@ -26,8 +26,8 @@ const Companies = () => {
   const [open, setOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [selectedCompany, setSelectedCompany] = useState(null)
-  const [isLoading, setIsLoading] = useState(true) // Добавлено состояние isLoading
-  const [error, setError] = useState(null) // Добавлено состояние error
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => {
@@ -51,7 +51,7 @@ const Companies = () => {
   useEffect(() => {
     setIsLoading(queryLoading)
   }, [queryLoading])
-  // const { data } = useGetCompaniesQuery()
+
   const [addCompany] = useAddCompanyMutation()
   const [updateCompany] = useUpdateCompanyMutation()
   const [deleteCompany] = useDeleteCompanyMutation()

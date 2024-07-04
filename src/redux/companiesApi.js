@@ -16,19 +16,23 @@ export const companiesApi = createApi({
     },
   }),
   tagTypes: ['Company'],
+
   endpoints: (builder) => ({
+    // GET ALL COMPANIES
     getCompanies: builder.query({
       query: () => `/companies`,
       providesTags: ['Company'],
     }),
+    // ADD NEW COMPANY
     addCompany: builder.mutation({
       query: (newCompany) => ({
         url: '/companies',
         method: 'POST',
         body: newCompany,
       }),
-      invalidatesTags: ['Company'], // Инвалидируем теги для обновления списка компаний
+      invalidatesTags: ['Company'],
     }),
+    // COMPANY EDIT
     updateCompany: builder.mutation({
       query: ({ id, ...update }) => ({
         url: `/companies/${id}`,
@@ -37,6 +41,7 @@ export const companiesApi = createApi({
       }),
       invalidatesTags: ['Company'],
     }),
+    // DELETE COMPANY
     deleteCompany: builder.mutation({
       query: (id) => ({
         url: `/companies/${id}`,
@@ -47,8 +52,6 @@ export const companiesApi = createApi({
   }),
 })
 
-// Export hooks for usage in function components, which are
-// auto-generated based on the defined endpoints
 export const {
   useGetCompaniesQuery,
   useAddCompanyMutation,

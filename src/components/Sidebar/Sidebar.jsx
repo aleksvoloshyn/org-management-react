@@ -2,7 +2,7 @@ import Divider from '@mui/material/Divider'
 import Person4Icon from '@mui/icons-material/Person4'
 import { NavLink } from 'react-router-dom'
 
-import { useGetCurrentUserQuery } from './../../redux/userSlice'
+import { useGetCurrentUserQuery } from '../../redux/usersApi'
 import { useEffect } from 'react'
 import css from './sidebar.module.scss'
 
@@ -32,7 +32,7 @@ const Sidebar = () => {
           Сompanies
         </NavLink>
         <NavLink
-          to="/users"
+          to="/users/userslist"
           className={({ isActive }) => (isActive ? css.activeLink : css.link)}
         >
           Users
@@ -40,7 +40,7 @@ const Sidebar = () => {
       </nav>
       <Divider />
       <NavLink
-        to="/users"
+        to="/profile"
         className={({ isActive }) => (isActive ? css.activeLink : css.link)}
       >
         Profile

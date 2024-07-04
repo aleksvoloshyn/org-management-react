@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-//make headers from localStorage
 const getHeaders = () => {
   const token = localStorage.getItem('token')
   return {
@@ -9,19 +8,22 @@ const getHeaders = () => {
   }
 }
 
-// API for logout
 export const logoutApi = createApi({
   reducerPath: 'logout',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://org-management-node.onrender.com/api',
     prepareHeaders: (headers) => {
-      return {
-        ...headers,
-        ...getHeaders(),
+      const newHeaders = new Headers(headers)
+      const token = localStorage.getItem('token')
+      if (token) {
+        newHeaders.set('Authorization', `Bearer ${token}`)
       }
+      newHeaders.set('Content-Type', 'application/json')
+      return newHeaders
     },
   }),
   endpoints: (builder) => ({
+    // LOGOUT
     logout: builder.mutation({
       query: () => ({
         url: `/auth/logout`,
