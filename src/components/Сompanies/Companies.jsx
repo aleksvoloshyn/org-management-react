@@ -1,21 +1,60 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import {
   useGetCompaniesQuery,
   useAddCompanyMutation,
+  useUpdateCompanyMutation,
+  useDeleteCompanyMutation,
 } from '../../redux/companiesSlice'
-import { Button, TextField, Box, Modal, Typography } from '@mui/material'
+import {
+  Button,
+  TextField,
+  Box,
+  Modal,
+  Typography,
+  IconButton,
+} from '@mui/material'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import CircularProgress from '@mui/material/CircularProgress'
+
+// import css from './companies.module.scss'
 
 const Companies = () => {
   const [open, setOpen] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [selectedCompany, setSelectedCompany] = useState(null)
+  const [isLoading, setIsLoading] = useState(true) // Добавлено состояние isLoading
+  const [error, setError] = useState(null) // Добавлено состояние error
 
   const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleClose = () => {
+    setOpen(false)
+    setIsEditing(false)
+    setSelectedCompany(null)
+  }
+  const {
+    data,
+    isError,
+    isLoading: queryLoading,
+    error: queryError,
+  } = useGetCompaniesQuery()
 
-  const { data, error, isLoading } = useGetCompaniesQuery()
+  useEffect(() => {
+    if (queryError) {
+      setError(queryError)
+    }
+  }, [queryError])
+
+  useEffect(() => {
+    setIsLoading(queryLoading)
+  }, [queryLoading])
+  // const { data } = useGetCompaniesQuery()
   const [addCompany] = useAddCompanyMutation()
+  const [updateCompany] = useUpdateCompanyMutation()
+  const [deleteCompany] = useDeleteCompanyMutation()
 
   const formik = useFormik({
     initialValues: {
@@ -36,48 +75,135 @@ const Companies = () => {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
-        await addCompany(values).unwrap()
+        if (isEditing && selectedCompany) {
+          await updateCompany({ id: selectedCompany.id, ...values }).unwrap()
+        } else {
+          await addCompany(values).unwrap()
+        }
         resetForm()
         handleClose()
       } catch (err) {
-        console.error('Failed to add company:', err)
+        console.error('Failed to save company:', err)
       }
     },
+    enableReinitialize: true,
   })
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>Error: {error.message}</div>
+  const handleEditClick = (company) => {
+    setSelectedCompany(company)
+    formik.setValues({
+      name: company.name,
+      address: company.address,
+      serviceOfActivity: company.serviceOfActivity,
+      numberOfEmployees: company.numberOfEmployees,
+      description: company.description,
+      type: company.type,
+    })
+    setIsEditing(true)
+    handleOpen()
+  }
 
-  const rows = data?.map((company) => ({
-    id: company._id,
-    name: company.name,
-    address: company.address,
-    serviceOfActivity: company.serviceOfActivity,
-    numberOfEmployees: company.numberOfEmployees,
-    description: company.description,
-    type: company.type,
-  }))
+  const handleDeleteClick = async (id) => {
+    try {
+      await deleteCompany(id).unwrap()
+    } catch (err) {
+      console.error('Failed to delete company:', err)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  if (isError) {
+    return <div>Error: {error.message}</div>
+  }
+
+  const rows = data
+    ? data.map((company) => ({
+        id: company._id,
+        name: company.name,
+        address: company.address,
+        serviceOfActivity: company.serviceOfActivity,
+        numberOfEmployees: company.numberOfEmployees,
+        description: company.description,
+        type: company.type,
+      }))
+    : []
 
   const columns = [
-    { field: 'name', headerName: 'Name', width: 120 },
-    { field: 'address', headerName: 'Address', width: 250 },
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      minWidth: 80,
+      headerClassName: 'header-bold',
+    },
+    {
+      field: 'address',
+      headerName: 'Address',
+      flex: 2,
+      minWidth: 300,
+      headerClassName: 'header-bold',
+    },
     {
       field: 'serviceOfActivity',
       headerName: 'Service of Activity',
-      width: 150,
+      flex: 1,
+      minWidth: 200,
     },
     {
       field: 'numberOfEmployees',
-      headerName: 'Number of Employees',
-      width: 150,
+      headerName: 'Employees',
+      flex: 1,
+      minWidth: 100,
     },
-    { field: 'description', headerName: 'Description', width: 150 },
-    { field: 'type', headerName: 'Type', width: 150 },
+    { field: 'description', headerName: 'Description', flex: 2, minWidth: 150 },
+    { field: 'type', headerName: 'Type', flex: 1, minWidth: 80 },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      minWidth: 100,
+      renderCell: (params) => (
+        <Box>
+          <IconButton onClick={() => handleEditClick(params.row)}>
+            <EditIcon />
+          </IconButton>
+          <IconButton onClick={() => handleDeleteClick(params.row.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </Box>
+      ),
+    },
   ]
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 2,
+      }}
+    >
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpen}
+        sx={{ mb: 2 }}
+      >
         + Add New Company
       </Button>
 
@@ -89,7 +215,7 @@ const Companies = () => {
       >
         <Box sx={modalBoxStyle}>
           <Typography id="add-company-modal-title" variant="h6" component="h2">
-            Add New Company
+            {isEditing ? 'Edit Company' : 'Add New Company'}
           </Typography>
           <form onSubmit={formik.handleSubmit} style={addCompanyFormStyle}>
             <TextField
@@ -169,14 +295,15 @@ const Companies = () => {
               margin="normal"
             />
             <Button type="submit" variant="contained" color="primary" fullWidth>
-              Add Company
+              {isEditing ? 'Update Company' : 'Add Company'}
             </Button>
           </form>
         </Box>
       </Modal>
 
-      <Box sx={{ flexGrow: 1, overflow: 'hidden', mt: 2 }}>
+      <Box sx={{ flexGrow: 1, overflow: 'auto', mt: 2 }}>
         <DataGrid
+          // hideFooter
           rows={rows}
           columns={columns}
           pageSizeOptions={[5, 10]}
@@ -184,6 +311,19 @@ const Companies = () => {
             pagination: { paginationModel: { pageSize: 10 } },
           }}
           autoHeight
+          sx={{
+            fontSize: '14px',
+            '& .MuiDataGrid-root': {
+              border: 'none',
+            },
+            '& .MuiDataGrid-cell': {
+              whiteSpace: 'normal !important',
+              wordBreak: 'break-word !important',
+            },
+            '& .MuiDataGrid-columnHeaders': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            },
+          }}
           components={{
             Toolbar: GridToolbar,
           }}
@@ -198,7 +338,8 @@ const modalBoxStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: '90%',
+  maxWidth: 600,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,

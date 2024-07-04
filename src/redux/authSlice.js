@@ -1,42 +1,48 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { currentApiSlice } from './userSlice'
 
-// Создание API
 export const authApi = createApi({
-  reducerPath: 'auth', // Имя для reducer в Redux store
+  reducerPath: 'auth',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://org-management-node.onrender.com/api', // Базовый URL API
+    baseUrl: 'https://org-management-node.onrender.com/api',
   }),
-  tagTypes: ['Auth'], // Типы тегов для инвалидации кэша
+  tagTypes: ['Auth'],
   endpoints: (builder) => ({
     addSignin: builder.mutation({
-      // Конфигурация запроса для входа
       query: (values) => ({
-        url: `/auth/signin`, // Конечная точка для входа
+        url: `/auth/signin`,
         method: 'POST',
-        body: values, // Данные запроса (например, email и password)
+        body: values,
       }),
-      invalidatesTags: ['Auth'], // Инвалидация кэша по тегу 'Auth'
+      invalidatesTags: ['Auth', 'CurrentUser'],
     }),
+
     addSignup: builder.mutation({
-      // Конфигурация запроса для регистрации
       query: (values) => ({
-        url: `/auth/signup`, // Конечная точка для регистрации пользователя
+        url: `/auth/signup`,
         method: 'POST',
-        body: values, // Данные запроса (например, email, password, и др.)
+        body: values,
       }),
-      invalidatesTags: ['Auth'], // Инвалидация кэша по тегу 'Auth'
+      invalidatesTags: ['Auth'],
     }),
+    // LOGOUT
     logout: builder.mutation({
-      // Конфигурация запроса для выхода
       query: () => ({
-        url: `/auth/logout`, // Конечная точка для выхода пользователя
+        url: `/auth/logout`,
         method: 'POST',
       }),
-      invalidatesTags: ['Auth'], // Инвалидация кэша по тегу 'Auth'
+      invalidatesTags: ['Auth', 'CurrentUser'],
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+          dispatch(currentApiSlice.util.resetApiState()) // Сброс состояния текущего пользователя
+        } catch {
+          // Обработка ошибок
+        }
+      },
     }),
   }),
 })
 
-// Экспорт хуков для использования в функциональных компонентах
 export const { useAddSigninMutation, useAddSignupMutation, useLogoutMutation } =
   authApi

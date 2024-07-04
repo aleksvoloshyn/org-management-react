@@ -14,10 +14,25 @@
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
+.sidebarTitle {
+  color: #1976d2;
+  .sidebarSpanUser {
+    color: #000;
+    font-size: 14px;
+  }
+}
+.sidebarCurrentUser {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
 
 .nav {
   display: flex;
   flex-direction: column;
+  margin-top: 12px;
 }
 .link {
   color: #697a8d;

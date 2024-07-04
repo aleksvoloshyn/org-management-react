@@ -21,7 +21,7 @@ const SignIn = () => {
         const token = data.token // Получаем токен из ответа
         localStorage.setItem('token', data.token)
         console.log('Token:', token) // Выводим токен в консоль (можете использовать его далее по необходимости)
-        navigate('/') // Переход на главную страницу после успешной авторизации
+        navigate('/companies') // Переход на главную страницу после успешной авторизации
       } else {
         console.error('Sign in error: Token not found in response')
       }

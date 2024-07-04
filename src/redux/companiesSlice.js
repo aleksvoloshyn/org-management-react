@@ -29,9 +29,29 @@ export const companiesApi = createApi({
       }),
       invalidatesTags: ['Company'], // Инвалидируем теги для обновления списка компаний
     }),
+    updateCompany: builder.mutation({
+      query: ({ id, ...update }) => ({
+        url: `/companies/${id}`,
+        method: 'PUT',
+        body: update,
+      }),
+      invalidatesTags: ['Company'],
+    }),
+    deleteCompany: builder.mutation({
+      query: (id) => ({
+        url: `/companies/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Company'],
+    }),
   }),
 })
 
 // Export hooks for usage in function components, which are
 // auto-generated based on the defined endpoints
-export const { useGetCompaniesQuery, useAddCompanyMutation } = companiesApi
+export const {
+  useGetCompaniesQuery,
+  useAddCompanyMutation,
+  useUpdateCompanyMutation,
+  useDeleteCompanyMutation,
+} = companiesApi

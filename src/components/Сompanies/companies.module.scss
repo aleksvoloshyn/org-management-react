@@ -8,11 +8,12 @@
   padding: 16px;
   height: 100%; /* Использовать всю высоту */
   box-sizing: border-box;
+  border: 1px solid green;
 }
 
 /* Кнопка добавления компании */
 button {
-  align-self: flex-start; /* Выравнивание кнопки по левому краю */
+  align-self: flex-end; /* Выравнивание кнопки по левому краю */
 }
 
 /* Модальное окно */

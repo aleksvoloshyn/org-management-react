@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-// Функция для получения заголовков запроса с токеном из localStorage
+//make headers from localStorage
 const getHeaders = () => {
   const token = localStorage.getItem('token')
   return {
@@ -9,11 +9,11 @@ const getHeaders = () => {
   }
 }
 
-// Создание API для logout
+// API for logout
 export const logoutApi = createApi({
-  reducerPath: 'logout', // Имя для reducer в Redux store
+  reducerPath: 'logout',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://org-management-node.onrender.com/api', // Базовый URL API
+    baseUrl: 'https://org-management-node.onrender.com/api',
     prepareHeaders: (headers) => {
       return {
         ...headers,
@@ -23,18 +23,15 @@ export const logoutApi = createApi({
   }),
   endpoints: (builder) => ({
     logout: builder.mutation({
-      // Конфигурация запроса для выхода
       query: () => ({
-        url: `/auth/logout`, // Конечная точка для выхода пользователя
+        url: `/auth/logout`,
         method: 'POST',
       }),
-      invalidatesTags: ['Auth'], // Инвалидация кэша по тегу 'Auth'
+      invalidatesTags: ['Auth', 'CurrentUser'],
     }),
   }),
 })
 
-// Экспорт хуков для использования в функциональных компонентах
 export const { useLogoutMutation } = logoutApi
 
-// Экспорт reducer для использования в Redux store
 export default logoutApi.reducer

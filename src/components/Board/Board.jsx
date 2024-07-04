@@ -15,6 +15,7 @@ const Board = () => {
         {/* <Route path="/*" element={<NotFoundPage />} /> */}
         <Route path="/not-found" element={<NotFoundPage />} />
       </Routes>
+      {/* <p>bottom</p> */}
     </div>
   )
 }
