@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { baseUrl } from '../utils/baseUrl'
 
 const getToken = () => {
   return localStorage.getItem('token')
@@ -6,7 +7,7 @@ const getToken = () => {
 export const companiesApi = createApi({
   reducerPath: 'companies',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://org-management-node.onrender.com/api',
+    baseUrl: baseUrl,
     prepareHeaders: (headers) => {
       const token = getToken()
       if (token) {

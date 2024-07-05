@@ -1,17 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-const getHeaders = () => {
-  const token = localStorage.getItem('token')
-  return {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  }
-}
+import { baseUrl } from '../utils/baseUrl'
 
 export const logoutApi = createApi({
   reducerPath: 'logout',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://org-management-node.onrender.com/api',
+    baseUrl: baseUrl,
     prepareHeaders: (headers) => {
       const newHeaders = new Headers(headers)
       const token = localStorage.getItem('token')
