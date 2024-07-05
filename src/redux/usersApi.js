@@ -15,14 +15,14 @@ export const usersApi = createApi({
       return headers
     },
   }),
-  tagTypes: ['CurrentUser'],
+  tagTypes: ['CurrentUser', 'UserList', 'UserProfile'],
   endpoints: (builder) => ({
-    // GET СURRENT USER
+    // GET CURRENT USER
     getCurrentUser: builder.query({
       query: () => 'current',
       providesTags: ['CurrentUser'],
     }),
-    //GET  USERLIST
+    // GET USER LIST
     getUsersList: builder.query({
       query: () => 'userslist',
       providesTags: ['UserList'],
@@ -32,6 +32,15 @@ export const usersApi = createApi({
       query: () => 'profile',
       providesTags: ['UserProfile'],
     }),
+    // UPDATE USER PROFILE
+    updateProfile: builder.mutation({
+      query: ({ _id, ...userData }) => ({
+        url: `${_id}`,
+        method: 'PUT',
+        body: userData,
+      }),
+      invalidatesTags: ['UserProfile'],
+    }),
   }),
 })
 
@@ -39,4 +48,5 @@ export const {
   useGetCurrentUserQuery,
   useGetUsersListQuery,
   useGetProfileQuery,
+  useUpdateProfileMutation,
 } = usersApi

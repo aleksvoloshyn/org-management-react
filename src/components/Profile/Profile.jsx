@@ -1,11 +1,26 @@
-import Divider from '@mui/material/Divider'
-import { Button } from '@mui/material'
-import { useGetProfileQuery } from '../../redux/usersApi'
+import React, { useState } from 'react'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  CircularProgress,
+  TextField,
+  Grid,
+  Box,
+} from '@mui/material'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+} from '../../redux/usersApi'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import userPic from './../../assets/userpic.png'
 import css from './profile.module.scss'
 
@@ -35,11 +50,60 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: 0,
     },
   },
+  button: {
+    marginTop: theme.spacing(2),
+  },
+  dialogContent: {
+    padding: theme.spacing(3),
+  },
+  dialogForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+  },
+  textField: {
+    marginBottom: theme.spacing(2),
+  },
 }))
 
 const Profile = () => {
   const classes = useStyles()
   const { data: profile, error, isLoading } = useGetProfileQuery()
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
+  const [open, setOpen] = useState(false)
+
+  const formik = useFormik({
+    initialValues: {
+      first_name: profile?.first_name || '',
+      last_name: profile?.last_name || '',
+      nick_name: profile?.nick_name || '',
+      description: profile?.description || '',
+      position: profile?.position || '',
+      email: profile?.email || '',
+      phone_number: profile?.phone_number || '',
+    },
+    validationSchema: Yup.object({
+      first_name: Yup.string().required('First name is required'),
+      last_name: Yup.string().required('Last name is required'),
+      email: Yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
+      phone_number: Yup.string().required('Phone number is required'),
+    }),
+    onSubmit: async (values) => {
+      try {
+        if (profile?._id) {
+          await updateProfile({ _id: profile._id, ...values }).unwrap()
+          setOpen(false) // Close the dialog on success
+        } else {
+          console.error('User ID (_id) is missing')
+        }
+      } catch (error) {
+        console.error('Failed to update profile', error)
+      }
+    },
+    enableReinitialize: true, // Ensures form is reset when profile data is loaded
+  })
 
   if (isLoading) return <CircularProgress />
   if (error) return <div>Error: {error.message}</div>
@@ -48,7 +112,7 @@ const Profile = () => {
   return (
     <div className={css.profileWrapper}>
       <Card className={classes.root}>
-        <img src={userPic} alt="userPic" width={60} height={60} />
+        <img src={userPic} alt="userPic" width={60} height={80} />
         <CardContent>
           <Typography variant="h4" className={classes.title}>
             {profile.first_name} {profile.last_name}
@@ -69,12 +133,143 @@ const Profile = () => {
           <Typography variant="body1" className={classes.info}>
             <b>Phone:</b> {profile.phone_number}
           </Typography>
-          {/* В реальном приложении не отображайте пароль */}
         </CardContent>
       </Card>
-      <Button disabled={isLoading} variant="contained" color="info">
+      <Button onClick={() => setOpen(true)} variant="contained" color="info">
         Edit profile
       </Button>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Update Profile</DialogTitle>
+        <DialogContent className={classes.dialogContent}>
+          <Box
+            component="form"
+            onSubmit={formik.handleSubmit}
+            className={classes.dialogForm}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="First Name"
+                  name="first_name"
+                  value={formik.values.first_name}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.first_name &&
+                    Boolean(formik.errors.first_name)
+                  }
+                  helperText={
+                    formik.touched.first_name && formik.errors.first_name
+                  }
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Last Name"
+                  name="last_name"
+                  value={formik.values.last_name}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.last_name && Boolean(formik.errors.last_name)
+                  }
+                  helperText={
+                    formik.touched.last_name && formik.errors.last_name
+                  }
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Nickname"
+                  name="nick_name"
+                  value={formik.values.nick_name}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.nick_name && Boolean(formik.errors.nick_name)
+                  }
+                  helperText={
+                    formik.touched.nick_name && formik.errors.nick_name
+                  }
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Position"
+                  name="position"
+                  value={formik.values.position}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.position && Boolean(formik.errors.position)
+                  }
+                  helperText={formik.touched.position && formik.errors.position}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Description"
+                  name="description"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.description &&
+                    Boolean(formik.errors.description)
+                  }
+                  helperText={
+                    formik.touched.description && formik.errors.description
+                  }
+                  fullWidth
+                  multiline
+                  rows={3}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Phone"
+                  name="phone_number"
+                  value={formik.values.phone_number}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.phone_number &&
+                    Boolean(formik.errors.phone_number)
+                  }
+                  helperText={
+                    formik.touched.phone_number && formik.errors.phone_number
+                  }
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+            <DialogActions>
+              <Button onClick={() => setOpen(false)} color="secondary">
+                Cancel
+              </Button>
+              <Button type="submit" color="primary" disabled={isUpdating}>
+                {isUpdating ? <CircularProgress size={24} /> : 'Save'}
+              </Button>
+            </DialogActions>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
