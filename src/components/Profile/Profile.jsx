@@ -150,7 +150,7 @@ const Profile = () => {
             onSubmit={formik.handleSubmit}
             className={classes.dialogForm}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={2} className={css.profileLabel}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="First Name"
