@@ -1,8 +1,222 @@
-{
-  "goods": [
-    {
-      "id": "3b87",
-      "name": "1"
+[
+  {
+    "name": "Alpha Inc.",
+    "address": "1234 Elm Street, Springfield",
+    "serviceOfActivity": "Software Development",
+    "numberOfEmployees": "50",
+    "description": "Specializes in custom software solutions.",
+    "type": "Private",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
     }
-  ]
-}
+  },
+  {
+    "name": "Beta LLC",
+    "address": "4321 Oak Avenue, Capital City",
+    "serviceOfActivity": "Consulting",
+    "numberOfEmployees": "30",
+    "description": "Provides business consulting services.",
+    "type": "LLC",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Gamma Corp.",
+    "address": "5678 Pine Road, Shelbyville",
+    "serviceOfActivity": "Marketing",
+    "numberOfEmployees": "70",
+    "description": "Offers marketing and advertising services.",
+    "type": "Corporation",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Delta Co.",
+    "address": "8765 Birch Lane, Springfield",
+    "serviceOfActivity": "Financial Services",
+    "numberOfEmployees": "40",
+    "description": "Provides financial advisory and investment services.",
+    "type": "Private",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Epsilon Ltd.",
+    "address": "2345 Maple Avenue, Capital City",
+    "serviceOfActivity": "Healthcare",
+    "numberOfEmployees": "60",
+    "description": "Offers healthcare management and services.",
+    "type": "Limited",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Zeta Enterprises",
+    "address": "9876 Cedar Street, Shelbyville",
+    "serviceOfActivity": "Education",
+    "numberOfEmployees": "80",
+    "description": "Provides educational programs and materials.",
+    "type": "Corporation",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Eta Services",
+    "address": "3456 Willow Road, Springfield",
+    "serviceOfActivity": "Transportation",
+    "numberOfEmployees": "100",
+    "description": "Offers logistics and transportation services.",
+    "type": "Private",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Theta Solutions",
+    "address": "6543 Spruce Avenue, Capital City",
+    "serviceOfActivity": "IT Services",
+    "numberOfEmployees": "120",
+    "description": "Provides IT support and solutions.",
+    "type": "LLC",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Iota Technologies",
+    "address": "1234 Poplar Street, Shelbyville",
+    "serviceOfActivity": "Engineering",
+    "numberOfEmployees": "150",
+    "description": "Specializes in engineering solutions and consulting.",
+    "type": "Corporation",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Kappa Innovations",
+    "address": "7890 Chestnut Lane, Springfield",
+    "serviceOfActivity": "Research",
+    "numberOfEmployees": "200",
+    "description": "Focuses on innovative research and development.",
+    "type": "Private",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Lambda Ventures",
+    "address": "4567 Redwood Avenue, Capital City",
+    "serviceOfActivity": "Investment",
+    "numberOfEmployees": "25",
+    "description": "Invests in emerging markets and startups.",
+    "type": "LLC",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Mu Holdings",
+    "address": "8910 Fir Street, Shelbyville",
+    "serviceOfActivity": "Real Estate",
+    "numberOfEmployees": "35",
+    "description": "Manages and develops real estate properties.",
+    "type": "Corporation",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Nu Enterprises",
+    "address": "1236 Pine Lane, Springfield",
+    "serviceOfActivity": "Construction",
+    "numberOfEmployees": "55",
+    "description": "Provides construction and building services.",
+    "type": "Private",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Xi Solutions",
+    "address": "4323 Ash Avenue, Capital City",
+    "serviceOfActivity": "Legal",
+    "numberOfEmployees": "45",
+    "description": "Offers legal consulting and services.",
+    "type": "LLC",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Omicron Inc.",
+    "address": "6789 Beech Street, Shelbyville",
+    "serviceOfActivity": "Entertainment",
+    "numberOfEmployees": "65",
+    "description": "Produces entertainment content and events.",
+    "type": "Corporation",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Pi Enterprises",
+    "address": "5674 Walnut Road, Springfield",
+    "serviceOfActivity": "Agriculture",
+    "numberOfEmployees": "85",
+    "description": "Operates in the agricultural sector.",
+    "type": "Private",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Rho Ventures",
+    "address": "7891 Hickory Lane, Capital City",
+    "serviceOfActivity": "Energy",
+    "numberOfEmployees": "95",
+    "description": "Provides energy solutions and services.",
+    "type": "LLC",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Sigma Innovations",
+    "address": "2348 Cedar Avenue, Shelbyville",
+    "serviceOfActivity": "Telecommunications",
+    "numberOfEmployees": "110",
+    "description": "Specializes in telecommunications solutions.",
+    "type": "Corporation",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Tau Services",
+    "address": "3459 Birch Road, Springfield",
+    "serviceOfActivity": "Hospitality",
+    "numberOfEmployees": "130",
+    "description": "Provides hospitality and tourism services.",
+    "type": "Private",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  },
+  {
+    "name": "Upsilon Technologies",
+    "address": "6541 Maple Street, Capital City",
+    "serviceOfActivity": "Manufacturing",
+    "numberOfEmployees": "140",
+    "description": "Produces industrial and consumer goods.",
+    "type": "LLC",
+    "owner": {
+      "$oid": "6682b5d3ecfae05d70952891"
+    }
+  }
+]

@@ -2,55 +2,64 @@ import { useState, useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import {
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+  Modal,
+  TextField,
+  IconButton,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material'
+import { green, red } from '@mui/material/colors'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+
+import {
   useGetCompaniesQuery,
   useAddCompanyMutation,
   useUpdateCompanyMutation,
   useDeleteCompanyMutation,
 } from '../../redux/companiesApi'
-import {
-  Button,
-  TextField,
-  Box,
-  Modal,
-  Typography,
-  IconButton,
-} from '@mui/material'
-import { DataGrid, GridToolbar } from '@mui/x-data-grid'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
-import CircularProgress from '@mui/material/CircularProgress'
-
-// import css from './companies.module.scss'
 
 const Companies = () => {
   const [open, setOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [selectedCompany, setSelectedCompany] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [modalError, setModalError] = useState(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [companyToDelete, setCompanyToDelete] = useState(null)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => {
     setOpen(false)
     setIsEditing(false)
     setSelectedCompany(null)
+    setModalError(null)
   }
-  const {
-    data,
-    isError,
-    isLoading: queryLoading,
-    error: queryError,
-  } = useGetCompaniesQuery()
 
-  useEffect(() => {
-    if (queryError) {
-      setError(queryError)
-    }
-  }, [queryError])
+  const handleDeleteDialogOpen = (id) => {
+    setCompanyToDelete(id)
+    setDeleteDialogOpen(true)
+  }
 
-  useEffect(() => {
-    setIsLoading(queryLoading)
-  }, [queryLoading])
+  const handleDeleteDialogClose = () => {
+    setCompanyToDelete(null)
+    setDeleteDialogOpen(false)
+  }
+
+  const { data, error, isLoading } = useGetCompaniesQuery()
 
   const [addCompany] = useAddCompanyMutation()
   const [updateCompany] = useUpdateCompanyMutation()
@@ -76,13 +85,14 @@ const Companies = () => {
     onSubmit: async (values, { resetForm }) => {
       try {
         if (isEditing && selectedCompany) {
-          await updateCompany({ id: selectedCompany.id, ...values }).unwrap()
+          await updateCompany({ id: selectedCompany._id, ...values }).unwrap()
         } else {
           await addCompany(values).unwrap()
         }
         resetForm()
         handleClose()
       } catch (err) {
+        setModalError('Failed to save company')
         console.error('Failed to save company:', err)
       }
     },
@@ -103,109 +113,94 @@ const Companies = () => {
     handleOpen()
   }
 
-  const handleDeleteClick = async (id) => {
+  const handleDeleteClick = async () => {
     try {
-      await deleteCompany(id).unwrap()
+      await deleteCompany(companyToDelete).unwrap()
+      handleDeleteDialogClose()
     } catch (err) {
       console.error('Failed to delete company:', err)
     }
   }
 
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    )
-  }
-
-  if (isError) {
-    return <div>Error: {error.message}</div>
-  }
-
-  const rows = data
-    ? data.map((company) => ({
-        id: company._id,
-        name: company.name,
-        address: company.address,
-        serviceOfActivity: company.serviceOfActivity,
-        numberOfEmployees: company.numberOfEmployees,
-        description: company.description,
-        type: company.type,
-      }))
-    : []
+  if (isLoading) return <CircularProgress />
+  if (error)
+    return <Typography color="error">Error loading companies</Typography>
 
   const columns = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      flex: 1,
-      minWidth: 80,
-      headerClassName: 'header-bold',
-    },
-    {
-      field: 'address',
-      headerName: 'Address',
-      flex: 2,
-      minWidth: 300,
-      headerClassName: 'header-bold',
-    },
-    {
-      field: 'serviceOfActivity',
-      headerName: 'Service of Activity',
-      flex: 1,
-      minWidth: 200,
-    },
-    {
-      field: 'numberOfEmployees',
-      headerName: 'Employees',
-      flex: 1,
-      minWidth: 100,
-    },
-    { field: 'description', headerName: 'Description', flex: 2, minWidth: 150 },
-    { field: 'type', headerName: 'Type', flex: 1, minWidth: 80 },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 1,
-      minWidth: 100,
-      renderCell: (params) => (
-        <Box>
-          <IconButton onClick={() => handleEditClick(params.row)}>
-            <EditIcon />
-          </IconButton>
-          <IconButton onClick={() => handleDeleteClick(params.row.id)}>
-            <DeleteIcon />
-          </IconButton>
-        </Box>
-      ),
-    },
+    { id: 'name', label: 'Name', minWidth: 150 },
+    { id: 'address', label: 'Address', minWidth: 120 },
+    { id: 'serviceOfActivity', label: 'Service of Activity', minWidth: 200 },
+    { id: 'numberOfEmployees', label: 'Employees', minWidth: 80 },
+    { id: 'description', label: 'Description', minWidth: 200 },
+    { id: 'type', label: 'Type', minWidth: 100 },
+    { id: 'actions', label: 'Actions', minWidth: 100 },
   ]
 
   return (
-    <Box
-      sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: 2,
-      }}
-    >
+    <Box sx={{ width: '100%', overflowY: 'auto' }}>
       <Button
         variant="contained"
         color="primary"
         onClick={handleOpen}
-        sx={{ mb: 2 }}
+        sx={{ display: 'block', mb: 3 }}
       >
         + Add New Company
       </Button>
+
+      <TableContainer
+        component={Paper}
+        sx={{ maxHeight: '80vh', overflowY: 'auto' }}
+      >
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  sx={{
+                    fontWeight: 'bold',
+                    minWidth: column.minWidth,
+                  }}
+                >
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((company) => (
+              <TableRow key={company._id}>
+                <TableCell sx={{ padding: '8px' }}>{company.name}</TableCell>
+                <TableCell sx={{ padding: '8px' }}>{company.address}</TableCell>
+                <TableCell sx={{ padding: '8px' }}>
+                  {company.serviceOfActivity}
+                </TableCell>
+                <TableCell sx={{ padding: '8px' }}>
+                  {company.numberOfEmployees}
+                </TableCell>
+                <TableCell sx={{ padding: '8px' }}>
+                  {company.description}
+                </TableCell>
+                <TableCell sx={{ padding: '8px' }}>{company.type}</TableCell>
+                <TableCell sx={{ padding: '8px' }}>
+                  <IconButton
+                    onClick={() => handleEditClick(company)}
+                    sx={{ color: green[600] }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleDeleteDialogOpen(company._id)}
+                    sx={{ color: red[600] }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       <Modal
         open={open}
@@ -218,6 +213,7 @@ const Companies = () => {
             {isEditing ? 'Edit Company' : 'Add New Company'}
           </Typography>
           <form onSubmit={formik.handleSubmit} style={addCompanyFormStyle}>
+            {modalError && <Typography color="error">{modalError}</Typography>}
             <TextField
               name="name"
               label="Company Name"
@@ -301,34 +297,29 @@ const Companies = () => {
         </Box>
       </Modal>
 
-      <Box sx={{ flexGrow: 1, overflow: 'auto', mt: 2 }}>
-        <DataGrid
-          // hideFooter
-          rows={rows}
-          columns={columns}
-          pageSizeOptions={[5, 10]}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 10 } },
-          }}
-          autoHeight
-          sx={{
-            fontSize: '14px',
-            '& .MuiDataGrid-root': {
-              border: 'none',
-            },
-            '& .MuiDataGrid-cell': {
-              whiteSpace: 'normal !important',
-              wordBreak: 'break-word !important',
-            },
-            '& .MuiDataGrid-columnHeaders': {
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-            },
-          }}
-          components={{
-            Toolbar: GridToolbar,
-          }}
-        />
-      </Box>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteDialogClose}
+        aria-labelledby="delete-company-dialog-title"
+        aria-describedby="delete-company-dialog-description"
+      >
+        <DialogTitle id="delete-company-dialog-title">
+          Confirm Deletion
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-company-dialog-description">
+            Are you sure you want to delete this company?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteClick} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }

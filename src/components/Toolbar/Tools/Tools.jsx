@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+
+import { Button, Box } from '@mui/material'
 import { useLogoutMutation } from '../../../redux/authLogoutApi'
 import { companiesApi } from '../../../redux/companiesApi'
 import { authApi } from '../../../redux/authApi'
@@ -39,10 +41,16 @@ const Tools = () => {
   return (
     <div className={css.tools}>
       <h2 className={css.toolsCurrentPage}>{currentPage}</h2>
-      <button onClick={handleLogout} disabled={isLoading}>
+      <Button
+        onClick={handleLogout}
+        disabled={isLoading}
+        variant="contained"
+        color="error"
+        className={css.toolsLogoutButton}
+      >
         {' '}
         {isLoading ? 'Logging out...' : 'Logout'}
-      </button>
+      </Button>
     </div>
   )
 }
