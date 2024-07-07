@@ -102,7 +102,7 @@ const Profile = () => {
         console.error('Failed to update profile', error)
       }
     },
-    enableReinitialize: true, // Ensures form is reset when profile data is loaded
+    enableReinitialize: true,
   })
 
   if (isLoading) return <CircularProgress />
