@@ -24,6 +24,11 @@ export const companiesApi = createApi({
       query: () => `/companies`,
       providesTags: ['Company'],
     }),
+    // GET ALL COMPANIES (from all users)
+    getCompaniesAdmin: builder.query({
+      query: () => `/companies/admin/all`,
+      providesTags: ['Company'],
+    }),
     // ADD NEW COMPANY
     addCompany: builder.mutation({
       query: (newCompany) => ({
@@ -58,4 +63,5 @@ export const {
   useAddCompanyMutation,
   useUpdateCompanyMutation,
   useDeleteCompanyMutation,
+  useGetCompaniesAdminQuery,
 } = companiesApi

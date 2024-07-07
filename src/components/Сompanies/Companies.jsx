@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useGetCurrentUserQuery } from '../../redux/usersApi'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import {
@@ -31,6 +32,7 @@ import {
   useAddCompanyMutation,
   useUpdateCompanyMutation,
   useDeleteCompanyMutation,
+  useGetCompaniesAdminQuery,
 } from '../../redux/companiesApi'
 
 const Companies = () => {
@@ -40,6 +42,13 @@ const Companies = () => {
   const [modalError, setModalError] = useState(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [companyToDelete, setCompanyToDelete] = useState(null)
+
+  // Используем useGetCurrentUserQuery для получения текущего пользователя
+  const {
+    data: currentUser,
+    error: currentUserError,
+    isLoading: isCurrentUserLoading,
+  } = useGetCurrentUserQuery()
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => {
@@ -59,7 +68,14 @@ const Companies = () => {
     setDeleteDialogOpen(false)
   }
 
-  const { data, error, isLoading } = useGetCompaniesQuery()
+  // Определяем, какой хук использовать на основе текущей роли пользователя
+  const {
+    data: companies,
+    error: companiesError,
+    isLoading: isCompaniesLoading,
+  } = currentUser?.isAdmin
+    ? useGetCompaniesAdminQuery()
+    : useGetCompaniesQuery()
 
   const [addCompany] = useAddCompanyMutation()
   const [updateCompany] = useUpdateCompanyMutation()
@@ -122,8 +138,8 @@ const Companies = () => {
     }
   }
 
-  if (isLoading) return <CircularProgress />
-  if (error)
+  if (isCurrentUserLoading || isCompaniesLoading) return <CircularProgress />
+  if (currentUserError || companiesError)
     return <Typography color="error">Error loading companies</Typography>
 
   const columns = [
@@ -168,7 +184,7 @@ const Companies = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((company) => (
+            {companies.map((company) => (
               <TableRow key={company._id}>
                 <TableCell sx={{ padding: '8px' }}>{company.name}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>{company.address}</TableCell>
@@ -290,7 +306,13 @@ const Companies = () => {
               fullWidth
               margin="normal"
             />
-            <Button type="submit" variant="contained" color="primary" fullWidth>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
               {isEditing ? 'Update Company' : 'Add Company'}
             </Button>
           </form>
@@ -300,14 +322,12 @@ const Companies = () => {
       <Dialog
         open={deleteDialogOpen}
         onClose={handleDeleteDialogClose}
-        aria-labelledby="delete-company-dialog-title"
-        aria-describedby="delete-company-dialog-description"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="delete-company-dialog-title">
-          Confirm Deletion
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Confirm Delete'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="delete-company-dialog-description">
+          <DialogContentText id="alert-dialog-description">
             Are you sure you want to delete this company?
           </DialogContentText>
         </DialogContent>
@@ -315,7 +335,7 @@ const Companies = () => {
           <Button onClick={handleDeleteDialogClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDeleteClick} color="secondary">
+          <Button onClick={handleDeleteClick} color="secondary" autoFocus>
             Delete
           </Button>
         </DialogActions>
@@ -324,13 +344,13 @@ const Companies = () => {
   )
 }
 
+// Стили для Modal Box и формы
 const modalBoxStyle = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '90%',
-  maxWidth: 600,
+  width: 400,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
@@ -340,7 +360,6 @@ const modalBoxStyle = {
 const addCompanyFormStyle = {
   display: 'flex',
   flexDirection: 'column',
-  gap: '16px',
 }
 
 export default Companies
