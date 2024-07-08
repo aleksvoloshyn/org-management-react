@@ -31,6 +31,7 @@ import {
   useDeleteUserMutation,
 } from '../../redux/usersApi'
 import { useAddSignupMutation } from '../../redux/authApi'
+import css from './usersList.module.scss'
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email format').required('Required'),
@@ -231,6 +232,7 @@ const UsersList = () => {
       </TableContainer>
 
       {selectedUser && (
+        // EDIT USER FORM
         <Dialog
           open={open}
           onClose={handleClose}
@@ -243,7 +245,7 @@ const UsersList = () => {
               onSubmit={formik.handleSubmit}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
-              <Grid container spacing={2}>
+              <Grid container spacing={2} className={css.usersListLabel}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="First Name"
