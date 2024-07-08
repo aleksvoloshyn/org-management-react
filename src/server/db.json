@@ -7,7 +7,7 @@
     "description": "Specializes in custom software solutions.",
     "type": "Private",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668bb855d7035d795911dfcc"
     }
   },
   {
@@ -18,7 +18,7 @@
     "description": "Provides business consulting services.",
     "type": "LLC",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668bb855d7035d795911dfcc"
     }
   },
   {
@@ -29,7 +29,7 @@
     "description": "Offers marketing and advertising services.",
     "type": "Corporation",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668bb855d7035d795911dfcc"
     }
   },
   {
@@ -40,7 +40,7 @@
     "description": "Provides financial advisory and investment services.",
     "type": "Private",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668bb855d7035d795911dfcc"
     }
   },
   {
@@ -51,7 +51,7 @@
     "description": "Offers healthcare management and services.",
     "type": "Limited",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668a9603f996dba45f0de27f"
     }
   },
   {
@@ -62,7 +62,7 @@
     "description": "Provides educational programs and materials.",
     "type": "Corporation",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668a9603f996dba45f0de27f"
     }
   },
   {
@@ -73,7 +73,7 @@
     "description": "Offers logistics and transportation services.",
     "type": "Private",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668b0c190b0a56022fb7146f"
     }
   },
   {
@@ -84,7 +84,7 @@
     "description": "Provides IT support and solutions.",
     "type": "LLC",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668b0c190b0a56022fb7146f"
     }
   },
   {
@@ -95,7 +95,7 @@
     "description": "Specializes in engineering solutions and consulting.",
     "type": "Corporation",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668b91a0d7035d795911dd7a"
     }
   },
   {
@@ -106,7 +106,7 @@
     "description": "Focuses on innovative research and development.",
     "type": "Private",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668b91a0d7035d795911dd7a"
     }
   },
   {
@@ -117,7 +117,7 @@
     "description": "Invests in emerging markets and startups.",
     "type": "LLC",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668bc089d7035d795911e03c"
     }
   },
   {
@@ -128,7 +128,7 @@
     "description": "Manages and develops real estate properties.",
     "type": "Corporation",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668bc089d7035d795911e03c"
     }
   },
   {
@@ -139,84 +139,7 @@
     "description": "Provides construction and building services.",
     "type": "Private",
     "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
-    }
-  },
-  {
-    "name": "Xi Solutions",
-    "address": "4323 Ash Avenue, Capital City",
-    "serviceOfActivity": "Legal",
-    "numberOfEmployees": "45",
-    "description": "Offers legal consulting and services.",
-    "type": "LLC",
-    "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
-    }
-  },
-  {
-    "name": "Omicron Inc.",
-    "address": "6789 Beech Street, Shelbyville",
-    "serviceOfActivity": "Entertainment",
-    "numberOfEmployees": "65",
-    "description": "Produces entertainment content and events.",
-    "type": "Corporation",
-    "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
-    }
-  },
-  {
-    "name": "Pi Enterprises",
-    "address": "5674 Walnut Road, Springfield",
-    "serviceOfActivity": "Agriculture",
-    "numberOfEmployees": "85",
-    "description": "Operates in the agricultural sector.",
-    "type": "Private",
-    "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
-    }
-  },
-  {
-    "name": "Rho Ventures",
-    "address": "7891 Hickory Lane, Capital City",
-    "serviceOfActivity": "Energy",
-    "numberOfEmployees": "95",
-    "description": "Provides energy solutions and services.",
-    "type": "LLC",
-    "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
-    }
-  },
-  {
-    "name": "Sigma Innovations",
-    "address": "2348 Cedar Avenue, Shelbyville",
-    "serviceOfActivity": "Telecommunications",
-    "numberOfEmployees": "110",
-    "description": "Specializes in telecommunications solutions.",
-    "type": "Corporation",
-    "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
-    }
-  },
-  {
-    "name": "Tau Services",
-    "address": "3459 Birch Road, Springfield",
-    "serviceOfActivity": "Hospitality",
-    "numberOfEmployees": "130",
-    "description": "Provides hospitality and tourism services.",
-    "type": "Private",
-    "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
-    }
-  },
-  {
-    "name": "Upsilon Technologies",
-    "address": "6541 Maple Street, Capital City",
-    "serviceOfActivity": "Manufacturing",
-    "numberOfEmployees": "140",
-    "description": "Produces industrial and consumer goods.",
-    "type": "LLC",
-    "owner": {
-      "$oid": "6682b5d3ecfae05d70952891"
+      "$oid": "668bc089d7035d795911e03c"
     }
   }
 ]

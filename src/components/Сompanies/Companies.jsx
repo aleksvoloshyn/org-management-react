@@ -168,6 +168,12 @@ const Companies = () => {
     { id: 'actions', label: 'Actions', minWidth: 100 },
   ]
 
+  const sortedCompanies = companiesData.slice().sort((a, b) => {
+    const nameCompare = a.name.localeCompare(b.name)
+    if (nameCompare !== 0) return nameCompare
+    return a.serviceOfActivity.localeCompare(b.serviceOfActivity)
+  })
+
   return (
     <Box sx={{ width: '100%', overflowY: 'auto' }}>
       <Button
@@ -200,7 +206,7 @@ const Companies = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {companiesData.map((company) => (
+            {sortedCompanies.map((company) => (
               <TableRow key={company._id}>
                 <TableCell sx={{ padding: '8px' }}>
                   {company.name}
