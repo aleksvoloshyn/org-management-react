@@ -1,4 +1,3 @@
-// import Container from './../Container'
 import SignUp from './../SignUp'
 import SignIn from './../SignIn'
 import css from './auth.module.scss'

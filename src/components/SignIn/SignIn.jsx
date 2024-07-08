@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { Button, TextField, Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import { useAddSigninMutation } from '../../redux/authApi' // Предположим, что здесь находится ваш хук для отправки данных
+import { useAddSigninMutation } from '../../redux/authApi' 
 
 import css from './signIn.module.scss'
 
@@ -13,15 +13,15 @@ const validationSchema = Yup.object({
 
 const SignIn = () => {
   const navigate = useNavigate()
-  const [addSignin] = useAddSigninMutation() // Хук для отправки данных регистрации
+  const [addSignin] = useAddSigninMutation()
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const { data } = await addSignin(values) // Вызов мутации для отправки данных и получения ответа
+      const { data } = await addSignin(values)
       if (data && data.token) {
-        const token = data.token // Получаем токен из ответа
+        const token = data.token
         await localStorage.setItem('token', data.token)
-        console.log('Token:', token) // Выводим токен в консоль (можете использовать его далее по необходимости)
-        navigate('/companies') // Переход на главную страницу после успешной авторизации
+        console.log('Token:', token)
+        navigate('/companies')
       } else {
         console.error('Sign in error: Token not found in response')
       }
@@ -32,7 +32,6 @@ const SignIn = () => {
     }
   }
   return (
-    // <Box sx={{ maxWidth: 380, mx: 'auto', mt: 3 }}>
     <Box className={css.signIn}>
       <h3 className={css.signinTitle}>Sign In</h3>
       <Formik

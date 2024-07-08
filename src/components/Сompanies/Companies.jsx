@@ -381,7 +381,7 @@ const Companies = () => {
   )
 }
 
-// Стили для Modal Box и формы
+
 const modalBoxStyle = {
   position: 'absolute',
   top: '50%',

@@ -1,5 +1,3 @@
-// src/components/SignUp.jsx
-
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { Button, TextField, Box } from '@mui/material'
@@ -27,7 +25,7 @@ const SignUp = () => {
       console.log('Registration successful!')
       console.log(values)
       setSubmitting(false)
-      navigate('../') // Redirect to login page after successful registration
+      navigate('../')
     } catch (error) {
       console.error('Failed to register:', error)
       setSubmitting(false)
