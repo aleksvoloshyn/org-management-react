@@ -24,7 +24,8 @@ export const authApi = createApi({
         method: 'POST',
         body: values,
       }),
-      invalidatesTags: ['Auth'],
+      invalidatesTags: ['Auth', 'UserList'],
+      
     }),
   }),
 })

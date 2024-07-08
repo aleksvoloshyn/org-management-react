@@ -43,7 +43,7 @@ const Companies = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [companyToDelete, setCompanyToDelete] = useState(null)
 
-  // Используем useGetCurrentUserQuery для получения текущего пользователя
+  // cettinG current user
   const {
     data: currentUser,
     error: currentUserError,
@@ -68,14 +68,25 @@ const Companies = () => {
     setDeleteDialogOpen(false)
   }
 
-  // Определяем, какой хук использовать на основе текущей роли пользователя
+  const isAdmin = currentUser?.isAdmin
+
   const {
     data: companies,
     error: companiesError,
     isLoading: isCompaniesLoading,
-  } = currentUser?.isAdmin
-    ? useGetCompaniesAdminQuery()
-    : useGetCompaniesQuery()
+  } = useGetCompaniesQuery()
+
+  const {
+    data: companiesAdmin,
+    error: companiesAdminError,
+    isLoading: isCompaniesAdminLoading,
+  } = useGetCompaniesAdminQuery(undefined, {
+    skip: !isAdmin,
+  })
+
+  const companiesData = isAdmin ? companiesAdmin : companies
+
+  console.log(companiesData)
 
   const [addCompany] = useAddCompanyMutation()
   const [updateCompany] = useUpdateCompanyMutation()
@@ -138,8 +149,13 @@ const Companies = () => {
     }
   }
 
-  if (isCurrentUserLoading || isCompaniesLoading) return <CircularProgress />
-  if (currentUserError || companiesError)
+  if (
+    isCurrentUserLoading ||
+    isCompaniesLoading ||
+    (isAdmin && isCompaniesAdminLoading)
+  )
+    return <CircularProgress />
+  if (currentUserError || companiesError || (isAdmin && companiesAdminError))
     return <Typography color="error">Error loading companies</Typography>
 
   const columns = [
@@ -184,9 +200,22 @@ const Companies = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {companies.map((company) => (
+            {companiesData.map((company) => (
               <TableRow key={company._id}>
-                <TableCell sx={{ padding: '8px' }}>{company.name}</TableCell>
+                <TableCell sx={{ padding: '8px' }}>
+                  {company.name}
+                  <Typography
+                    variant="body2"
+                    component="span"
+                    sx={{
+                      color: red[600],
+                      fontSize: '0.75rem',
+                      display: 'block',
+                    }}
+                  >
+                    {company?.owner?.nick_name || '! no owner !'}
+                  </Typography>
+                </TableCell>
                 <TableCell sx={{ padding: '8px' }}>{company.address}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>
                   {company.serviceOfActivity}

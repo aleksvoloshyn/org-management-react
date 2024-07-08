@@ -23,7 +23,7 @@ import {
 import { green, red } from '@mui/material/colors'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { useFormik } from 'formik'
+import { useFormik, Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import {
   useGetUsersListQuery,
@@ -31,21 +31,31 @@ import {
   useDeleteUserMutation,
 } from '../../redux/usersApi'
 
-import css from './usersList.module.scss'
+import { useAddSignupMutation } from '../../redux/authApi'
+
+const validationSchema = Yup.object({
+  email: Yup.string().email('Invalid email format').required('Required'),
+  password: Yup.string().min(6, 'Minimum 6 characters').required('Required'),
+  phone_number: Yup.string().required('Required'),
+  last_name: Yup.string().required('Required'),
+  first_name: Yup.string().required('Required'),
+  nick_name: Yup.string().required('Required'),
+  description: Yup.string().required('Required'),
+  position: Yup.string().required('Required'),
+})
 
 const UsersList = () => {
   const { data, error, isLoading } = useGetUsersListQuery()
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
   const [deleteUser] = useDeleteUserMutation()
+  const [addSignup] = useAddSignupMutation()
   const [open, setOpen] = useState(false)
+  const [openAddUser, setOpenAddUser] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState(null)
 
-  console.log(data)
-
   const currentUserToken = localStorage.getItem('token')
-  console.log(currentUserToken)
 
   const handleEditClick = (user) => {
     setSelectedUser(user)
@@ -55,6 +65,14 @@ const UsersList = () => {
   const handleClose = () => {
     setOpen(false)
     setSelectedUser(null)
+  }
+
+  const handleOpenAddUser = () => {
+    setOpenAddUser(true)
+  }
+
+  const handleCloseAddUser = () => {
+    setOpenAddUser(false)
   }
 
   const handleDeleteDialogOpen = (id) => {
@@ -113,6 +131,18 @@ const UsersList = () => {
     enableReinitialize: true,
   })
 
+  const handleSubmitAddUser = async (values, { setSubmitting }) => {
+    try {
+      await addSignup(values).unwrap()
+      console.log('Registration successful!')
+      setSubmitting(false)
+      setOpenAddUser(false)
+    } catch (error) {
+      console.error('Failed to register:', error)
+      setSubmitting(false)
+    }
+  }
+
   if (isLoading) return <CircularProgress />
   if (error) return <Typography color="error">Error loading users</Typography>
 
@@ -133,6 +163,7 @@ const UsersList = () => {
         variant="contained"
         color="primary"
         sx={{ display: 'block', mb: 3 }}
+        onClick={handleOpenAddUser}
       >
         + Add New user
       </Button>
@@ -210,7 +241,7 @@ const UsersList = () => {
               onSubmit={formik.handleSubmit}
               sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
             >
-              <Grid container spacing={2} className={css.usersListLabel}>
+              <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="First Name"
@@ -259,6 +290,24 @@ const UsersList = () => {
                       formik.touched.nick_name && formik.errors.nick_name
                     }
                     fullWidth
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Description"
+                    name="description"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.description &&
+                      Boolean(formik.errors.description)
+                    }
+                    helperText={
+                      formik.touched.description && formik.errors.description
+                    }
+                    fullWidth
+                    required
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -274,24 +323,7 @@ const UsersList = () => {
                       formik.touched.position && formik.errors.position
                     }
                     fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    label="Description"
-                    name="description"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    error={
-                      formik.touched.description &&
-                      Boolean(formik.errors.description)
-                    }
-                    helperText={
-                      formik.touched.description && formik.errors.description
-                    }
-                    fullWidth
-                    multiline
-                    rows={4}
+                    required
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -309,7 +341,7 @@ const UsersList = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    label="Phone"
+                    label="Phone Number"
                     name="phone_number"
                     value={formik.values.phone_number}
                     onChange={formik.handleChange}
@@ -321,15 +353,26 @@ const UsersList = () => {
                       formik.touched.phone_number && formik.errors.phone_number
                     }
                     fullWidth
+                    required
                   />
                 </Grid>
               </Grid>
               <DialogActions>
-                <Button onClick={handleClose} color="secondary">
+                <Button
+                  type="button"
+                  onClick={handleClose}
+                  color="secondary"
+                  variant="contained"
+                >
                   Cancel
                 </Button>
-                <Button type="submit" color="primary" disabled={isUpdating}>
-                  {isUpdating ? <CircularProgress size={24} /> : 'Save'}
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  disabled={isUpdating}
+                >
+                  Update
                 </Button>
               </DialogActions>
             </Box>
@@ -340,25 +383,193 @@ const UsersList = () => {
       <Dialog
         open={deleteDialogOpen}
         onClose={handleDeleteDialogClose}
-        aria-labelledby="delete-user-dialog-title"
-        aria-describedby="delete-user-dialog-description"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="delete-user-dialog-title">
-          Confirm Deletion
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
         <DialogContent>
-          <DialogContentText id="delete-user-dialog-description">
-            Are you sure you want to delete this user?
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this user? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteDialogClose} color="primary">
+          <Button
+            onClick={handleDeleteDialogClose}
+            color="secondary"
+            variant="contained"
+          >
             Cancel
           </Button>
-          <Button onClick={handleDeleteClick} color="secondary">
+          <Button
+            onClick={handleDeleteClick}
+            color="primary"
+            variant="contained"
+            autoFocus
+          >
             Delete
           </Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openAddUser}
+        onClose={handleCloseAddUser}
+        aria-labelledby="form-dialog-title-add"
+      >
+        <DialogTitle id="form-dialog-title-add">Add New User</DialogTitle>
+        <DialogContent>
+          <Formik
+            initialValues={{
+              email: '',
+              password: '',
+              phone_number: '',
+              last_name: '',
+              first_name: '',
+              nick_name: '',
+              description: '',
+              position: '',
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmitAddUser}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      label="Email"
+                      name="email"
+                      type="email"
+                      fullWidth
+                      error={Boolean(
+                        <ErrorMessage name="email" component="div" />
+                      )}
+                      helperText={<ErrorMessage name="email" component="div" />}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      label="Password"
+                      name="password"
+                      type="password"
+                      fullWidth
+                      error={Boolean(
+                        <ErrorMessage name="password" component="div" />
+                      )}
+                      helperText={
+                        <ErrorMessage name="password" component="div" />
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      label="Phone Number"
+                      name="phone_number"
+                      fullWidth
+                      error={Boolean(
+                        <ErrorMessage name="phone_number" component="div" />
+                      )}
+                      helperText={
+                        <ErrorMessage name="phone_number" component="div" />
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      label="First Name"
+                      name="first_name"
+                      fullWidth
+                      error={Boolean(
+                        <ErrorMessage name="first_name" component="div" />
+                      )}
+                      helperText={
+                        <ErrorMessage name="first_name" component="div" />
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      label="Last Name"
+                      name="last_name"
+                      fullWidth
+                      error={Boolean(
+                        <ErrorMessage name="last_name" component="div" />
+                      )}
+                      helperText={
+                        <ErrorMessage name="last_name" component="div" />
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      label="Nickname"
+                      name="nick_name"
+                      fullWidth
+                      error={Boolean(
+                        <ErrorMessage name="nick_name" component="div" />
+                      )}
+                      helperText={
+                        <ErrorMessage name="nick_name" component="div" />
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      label="Description"
+                      name="description"
+                      fullWidth
+                      error={Boolean(
+                        <ErrorMessage name="description" component="div" />
+                      )}
+                      helperText={
+                        <ErrorMessage name="description" component="div" />
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      label="Position"
+                      name="position"
+                      fullWidth
+                      error={Boolean(
+                        <ErrorMessage name="position" component="div" />
+                      )}
+                      helperText={
+                        <ErrorMessage name="position" component="div" />
+                      }
+                    />
+                  </Grid>
+                </Grid>
+                <DialogActions>
+                  <Button
+                    onClick={handleCloseAddUser}
+                    color="secondary"
+                    variant="contained"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="primary"
+                    variant="contained"
+                    disabled={isSubmitting}
+                  >
+                    Add
+                  </Button>
+                </DialogActions>
+              </Form>
+            )}
+          </Formik>
+        </DialogContent>
       </Dialog>
     </Box>
   )
