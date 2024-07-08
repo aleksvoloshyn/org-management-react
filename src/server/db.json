@@ -117,7 +117,7 @@
     "description": "Invests in emerging markets and startups.",
     "type": "LLC",
     "owner": {
-      "$oid": "668bc089d7035d795911e03c"
+      "$oid": "668bc9b5d7035d795911e1b6"
     }
   },
   {
@@ -128,7 +128,7 @@
     "description": "Manages and develops real estate properties.",
     "type": "Corporation",
     "owner": {
-      "$oid": "668bc089d7035d795911e03c"
+      "$oid": "668bc9b5d7035d795911e1b6"
     }
   },
   {
@@ -139,7 +139,7 @@
     "description": "Provides construction and building services.",
     "type": "Private",
     "owner": {
-      "$oid": "668bc089d7035d795911e03c"
+      "$oid": "668bc9b5d7035d795911e1b6"
     }
   }
 ]

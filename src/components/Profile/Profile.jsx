@@ -20,6 +20,7 @@ import {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useDeleteUserMutation,
+  useGetCurrentUserQuery,
 } from '../../redux/usersApi'
 
 import { useNavigate } from 'react-router-dom'
@@ -74,6 +75,14 @@ const Profile = () => {
   const { data: profile, error, isLoading } = useGetProfileQuery()
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+
+  const {
+    data: currentUser,
+    error: currentUserError,
+    isLoading: isCurrentUserLoading,
+  } = useGetCurrentUserQuery()
+
+  console.log(currentUser)
 
   const [open, setOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -168,8 +177,11 @@ const Profile = () => {
           onClick={() => setConfirmDelete(true)}
           variant="contained"
           color="warning"
+          disabled={currentUser.nick_name === 'supervisor'}
         >
-          Delete profile
+          {currentUser.nick_name !== 'supervisor'
+            ? 'Delete profile'
+            : 'Undeletable profile(super admin)'}
         </Button>
       </div>
 
