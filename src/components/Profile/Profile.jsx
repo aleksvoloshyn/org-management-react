@@ -82,7 +82,7 @@ const Profile = () => {
     isLoading: isCurrentUserLoading,
   } = useGetCurrentUserQuery()
 
-  console.log(currentUser)
+  // console.log(currentUser)
 
   const [open, setOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)

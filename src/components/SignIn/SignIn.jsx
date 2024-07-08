@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { Button, TextField, Box } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import { useAddSigninMutation } from '../../redux/authApi' 
+import { useAddSigninMutation } from '../../redux/authApi'
 
 import css from './signIn.module.scss'
 
@@ -20,7 +20,7 @@ const SignIn = () => {
       if (data && data.token) {
         const token = data.token
         await localStorage.setItem('token', data.token)
-        console.log('Token:', token)
+        // console.log('Token:', token)
         navigate('/companies')
       } else {
         console.error('Sign in error: Token not found in response')

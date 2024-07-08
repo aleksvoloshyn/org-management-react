@@ -1,0 +1,145 @@
+{
+  "hash": "2031c84e",
+  "configHash": "457f354d",
+  "lockfileHash": "4a464597",
+  "browserHash": "973d0b50",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "b0f585c4",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "e7090891",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "1e1c8a25",
+      "needsInterop": true
+    },
+    "react-redux": {
+      "src": "../../node_modules/react-redux/dist/react-redux.mjs",
+      "file": "react-redux.js",
+      "fileHash": "e66291c6",
+      "needsInterop": false
+    },
+    "@reduxjs/toolkit": {
+      "src": "../../node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs",
+      "file": "@reduxjs_toolkit.js",
+      "fileHash": "2089042a",
+      "needsInterop": false
+    },
+    "@reduxjs/toolkit/query/react": {
+      "src": "../../node_modules/@reduxjs/toolkit/dist/query/react/rtk-query-react.modern.mjs",
+      "file": "@reduxjs_toolkit_query_react.js",
+      "fileHash": "c4af9aab",
+      "needsInterop": false
+    },
+    "formik": {
+      "src": "../../node_modules/formik/dist/formik.esm.js",
+      "file": "formik.js",
+      "fileHash": "30e1abfd",
+      "needsInterop": false
+    },
+    "yup": {
+      "src": "../../node_modules/yup/index.esm.js",
+      "file": "yup.js",
+      "fileHash": "4b46ee7c",
+      "needsInterop": false
+    },
+    "@mui/material": {
+      "src": "../../node_modules/@mui/material/index.js",
+      "file": "@mui_material.js",
+      "fileHash": "e04ee5a6",
+      "needsInterop": false
+    },
+    "@mui/material/Divider": {
+      "src": "../../node_modules/@mui/material/Divider/index.js",
+      "file": "@mui_material_Divider.js",
+      "fileHash": "3aa8ff82",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Person4": {
+      "src": "../../node_modules/@mui/icons-material/Person4.js",
+      "file": "@mui_icons-material_Person4.js",
+      "fileHash": "82bebe08",
+      "needsInterop": true
+    },
+    "@mui/material/colors": {
+      "src": "../../node_modules/@mui/material/colors/index.js",
+      "file": "@mui_material_colors.js",
+      "fileHash": "9933ec5a",
+      "needsInterop": false
+    },
+    "@mui/icons-material/Edit": {
+      "src": "../../node_modules/@mui/icons-material/Edit.js",
+      "file": "@mui_icons-material_Edit.js",
+      "fileHash": "71e99cf9",
+      "needsInterop": true
+    },
+    "@mui/icons-material/Delete": {
+      "src": "../../node_modules/@mui/icons-material/Delete.js",
+      "file": "@mui_icons-material_Delete.js",
+      "fileHash": "88a11ce8",
+      "needsInterop": true
+    },
+    "@material-ui/core/styles": {
+      "src": "../../node_modules/@material-ui/core/esm/styles/index.js",
+      "file": "@material-ui_core_styles.js",
+      "fileHash": "e49b6e58",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-FJMMTFC2": {
+      "file": "chunk-FJMMTFC2.js"
+    },
+    "chunk-CBV6TDRN": {
+      "file": "chunk-CBV6TDRN.js"
+    },
+    "chunk-BJARWL7M": {
+      "file": "chunk-BJARWL7M.js"
+    },
+    "chunk-ALLT63E2": {
+      "file": "chunk-ALLT63E2.js"
+    },
+    "chunk-FWJPG6DV": {
+      "file": "chunk-FWJPG6DV.js"
+    },
+    "chunk-EZ4FSJSI": {
+      "file": "chunk-EZ4FSJSI.js"
+    },
+    "chunk-XGHHRIHV": {
+      "file": "chunk-XGHHRIHV.js"
+    },
+    "chunk-H6C7QT2O": {
+      "file": "chunk-H6C7QT2O.js"
+    },
+    "chunk-UHINIFCJ": {
+      "file": "chunk-UHINIFCJ.js"
+    },
+    "chunk-J4KOQHYD": {
+      "file": "chunk-J4KOQHYD.js"
+    },
+    "chunk-45T3GX2Y": {
+      "file": "chunk-45T3GX2Y.js"
+    },
+    "chunk-CTX6CBAZ": {
+      "file": "chunk-CTX6CBAZ.js"
+    },
+    "chunk-BGZ4WZNU": {
+      "file": "chunk-BGZ4WZNU.js"
+    },
+    "chunk-W4EHDCLL": {
+      "file": "chunk-W4EHDCLL.js"
+    },
+    "chunk-EWTE5DHJ": {
+      "file": "chunk-EWTE5DHJ.js"
+    }
+  }
+}

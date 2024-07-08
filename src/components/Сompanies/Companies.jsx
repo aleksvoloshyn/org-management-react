@@ -86,7 +86,7 @@ const Companies = () => {
 
   const companiesData = isAdmin ? companiesAdmin : companies
 
-  console.log(companiesData)
+  // console.log(companiesData)
 
   const [addCompany] = useAddCompanyMutation()
   const [updateCompany] = useUpdateCompanyMutation()
@@ -380,7 +380,6 @@ const Companies = () => {
     </Box>
   )
 }
-
 
 const modalBoxStyle = {
   position: 'absolute',
