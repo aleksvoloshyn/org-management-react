@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
   Button,
   Dialog,
@@ -10,17 +10,20 @@ import {
   TextField,
   Grid,
   Box,
+  Typography,
+  Card,
+  CardContent,
 } from '@mui/material'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import {
   useGetProfileQuery,
   useUpdateProfileMutation,
+  useDeleteUserMutation,
 } from '../../redux/usersApi'
+
+import { useNavigate } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import Typography from '@material-ui/core/Typography'
 import userPic from './../../assets/userpic.png'
 import css from './profile.module.scss'
 
@@ -70,7 +73,11 @@ const Profile = () => {
   const classes = useStyles()
   const { data: profile, error, isLoading } = useGetProfileQuery()
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+
   const [open, setOpen] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: {
@@ -105,12 +112,27 @@ const Profile = () => {
     enableReinitialize: true,
   })
 
+  const handleDelete = async () => {
+    try {
+      if (profile?._id) {
+        await deleteUser({ id: profile._id }).unwrap()
+        localStorage.removeItem('token')
+        navigate('../auth')
+      } else {
+        console.error('User ID (_id) is missing')
+      }
+    } catch (error) {
+      console.error('Failed to delete profile', error)
+    }
+  }
+
   if (isLoading) return <CircularProgress />
   if (error) return <div>Error: {error.message}</div>
   if (!profile) return null
 
   return (
     <div className={css.profileWrapper}>
+      {/* CARD */}
       <Card className={classes.root}>
         <img src={userPic} alt="userPic" width={60} height={80} />
         <CardContent>
@@ -135,9 +157,23 @@ const Profile = () => {
           </Typography>
         </CardContent>
       </Card>
-      <Button onClick={() => setOpen(true)} variant="contained" color="info">
-        Edit profile
-      </Button>
+
+      {/* BUTTONS */}
+      <div className={css.profileButtons}>
+        <Button onClick={() => setOpen(true)} variant="contained" color="info">
+          Edit profile
+        </Button>
+
+        <Button
+          onClick={() => setConfirmDelete(true)}
+          variant="contained"
+          color="warning"
+        >
+          Delete profile
+        </Button>
+      </div>
+
+      {/* EDIT FORM */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -269,6 +305,29 @@ const Profile = () => {
             </DialogActions>
           </Box>
         </DialogContent>
+      </Dialog>
+
+      {/* CONFIRM DELETE DIALOG */}
+      <Dialog
+        open={confirmDelete}
+        onClose={() => setConfirmDelete(false)}
+        aria-labelledby="confirm-delete-dialog"
+      >
+        <DialogTitle id="confirm-delete-dialog">Confirm Delete</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete your profile? This action cannot be
+            undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDelete(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="warning" disabled={isDeleting}>
+            {isDeleting ? <CircularProgress size={24} /> : 'Delete'}
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   )

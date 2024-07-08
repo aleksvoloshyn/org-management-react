@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import ProtectedRouteAuth from '../ProtectedRoutes/ProtectedRouteAuth'
 
 import Auth from '../Auth'
 
@@ -8,13 +9,16 @@ import HomePage from '../../pages/HomePage'
 function App() {
   return (
     <>
-      {/* <Routes>
-        <Route path="/auth/*" element={<Auth />} />
-        <Route path="/" element={<HomePage />} />
-      </Routes> */}
       <Routes>
         <Route path="/auth/*" element={<Auth />} />
-        <Route path="*" element={<HomePage />} />
+        <Route
+          path="*"
+          element={
+            <ProtectedRouteAuth>
+              <HomePage />
+            </ProtectedRouteAuth>
+          }
+        />
       </Routes>
     </>
   )

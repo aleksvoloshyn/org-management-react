@@ -6,7 +6,7 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: baseUrl,
   }),
-  tagTypes: ['Auth'],
+  tagTypes: ['Auth', 'UserList'],
   endpoints: (builder) => ({
     // LOGIN (SignIn)
     addSignin: builder.mutation({
@@ -25,7 +25,6 @@ export const authApi = createApi({
         body: values,
       }),
       invalidatesTags: ['Auth', 'UserList'],
-      
     }),
   }),
 })

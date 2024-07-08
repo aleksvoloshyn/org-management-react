@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useGetCurrentUserQuery } from '../../redux/usersApi'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -213,7 +213,9 @@ const Companies = () => {
                       display: 'block',
                     }}
                   >
-                    {company?.owner?.nick_name || '! no owner !'}
+                    {currentUser.isAdmin === false
+                      ? ' my company'
+                      : company?.owner?.nick_name || '! no owner !'}
                   </Typography>
                 </TableCell>
                 <TableCell sx={{ padding: '8px' }}>{company.address}</TableCell>

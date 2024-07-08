@@ -1,13 +1,12 @@
 import Divider from '@mui/material/Divider'
 import Person4Icon from '@mui/icons-material/Person4'
 import { NavLink } from 'react-router-dom'
-
 import { useGetCurrentUserQuery } from '../../redux/usersApi'
 import { useEffect } from 'react'
 import css from './sidebar.module.scss'
 
 const Sidebar = () => {
-  const { data, refetch } = useGetCurrentUserQuery()
+  const { data: currentUser, refetch } = useGetCurrentUserQuery()
 
   useEffect(() => {
     refetch()
@@ -18,8 +17,10 @@ const Sidebar = () => {
       <div className={css.sidebarCurrentUser}>
         <Person4Icon />
         <h3 className={css.sidebarTitle}>
-          <span className={css.sidebarSpanUser}>user:</span>{' '}
-          {data?.nick_name || '???'}
+          <span className={currentUser?.isAdmin ? css.adminSpan : css.userSpan}>
+            {currentUser?.isAdmin ? 'admin' : 'user'}:
+          </span>{' '}
+          {currentUser?.nick_name || '???'}
         </h3>
       </div>
 
@@ -31,12 +32,14 @@ const Sidebar = () => {
         >
           Сompanies
         </NavLink>
-        <NavLink
-          to="/users/userslist"
-          className={({ isActive }) => (isActive ? css.activeLink : css.link)}
-        >
-          Users
-        </NavLink>
+        {currentUser?.isAdmin && (
+          <NavLink
+            to="/users/userslist"
+            className={({ isActive }) => (isActive ? css.activeLink : css.link)}
+          >
+            Users
+          </NavLink>
+        )}
       </nav>
       <Divider />
       <NavLink

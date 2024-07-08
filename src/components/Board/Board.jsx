@@ -5,6 +5,7 @@ import css from './board.module.scss'
 import UsersListPage from '../../pages/UsersListPage'
 import NotFoundPage from './../../pages/NotFoundPage'
 import ProfilePage from '../../pages/ProfilePage'
+import ProtectedRouteAdmin from '../ProtectedRoutes/ProtectedRouteAdmin'
 
 const Board = () => {
   return (
@@ -12,12 +13,13 @@ const Board = () => {
       <Toolbar />
       <Routes>
         <Route path="/companies" element={<CompaniesPage />} />
-        <Route path="/users/userslist" element={<UsersListPage />} />
-        {/* <Route path="/*" element={<NotFoundPage />} /> */}
+        <Route
+          path="/users/userslist"
+          element={<ProtectedRouteAdmin element={UsersListPage} adminOnly />}
+        />
         <Route path="/not-found" element={<NotFoundPage />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
-      {/* <p>bottom</p> */}
     </div>
   )
 }

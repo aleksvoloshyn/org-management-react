@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
-import { Button, Box } from '@mui/material'
+import { Button } from '@mui/material'
 import { useLogoutMutation } from '../../../redux/authLogoutApi'
 import { companiesApi } from '../../../redux/companiesApi'
 import { authApi } from '../../../redux/authApi'

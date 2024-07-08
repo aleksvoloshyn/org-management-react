@@ -19,7 +19,7 @@ const SignIn = () => {
       const { data } = await addSignin(values) // Вызов мутации для отправки данных и получения ответа
       if (data && data.token) {
         const token = data.token // Получаем токен из ответа
-        localStorage.setItem('token', data.token)
+        await localStorage.setItem('token', data.token)
         console.log('Token:', token) // Выводим токен в консоль (можете использовать его далее по необходимости)
         navigate('/companies') // Переход на главную страницу после успешной авторизации
       } else {
