@@ -1,6 +1,7 @@
 # React + Vite
 
 **WEB-приложение с возможностью авторизации пользователей и менеджмента собственных компаний.**
+https://org-management-react.vercel.app/auth
 
 **Front-end:** REACT JS, RTK QUERY
 
