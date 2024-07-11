@@ -5,6 +5,12 @@
   padding-top: 10px;
 }
 
+.profileWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .profileButtons {
   display: flex;
   justify-content: center;

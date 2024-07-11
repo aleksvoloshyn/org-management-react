@@ -135,8 +135,10 @@ const Profile = () => {
     }
   }
 
-  if (isLoading) return <CircularProgress />
-  if (error) return <div>Error: {error.message}</div>
+  // if (isLoading) return <CircularProgress />
+  // if (error) {
+  //   return <div>Error: {error.message}</div>
+  // }
   if (!profile) return null
 
   return (
