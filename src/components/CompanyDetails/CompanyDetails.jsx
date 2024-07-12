@@ -138,7 +138,7 @@ const CompanyDetails = () => {
         >
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             onClick={() => navigate('/companies')}
           >
             <KeyboardBackspaceIcon />

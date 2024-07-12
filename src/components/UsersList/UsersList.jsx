@@ -20,9 +20,11 @@ import {
   TextField,
   Grid,
 } from '@mui/material'
-import { green, red } from '@mui/material/colors'
+import { green, red, blue } from '@mui/material/colors'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+
 import { useFormik, Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import {
@@ -31,6 +33,7 @@ import {
   useDeleteUserMutation,
 } from '../../redux/usersApi'
 import { useAddSignupMutation } from '../../redux/authApi'
+import { useNavigate } from 'react-router-dom'
 import css from './usersList.module.scss'
 
 const validationSchema = Yup.object({
@@ -56,6 +59,7 @@ const UsersList = () => {
   const [userToDelete, setUserToDelete] = useState(null)
 
   const currentUserToken = localStorage.getItem('token')
+  const navigate = useNavigate()
 
   const handleEditClick = (user) => {
     setSelectedUser(user)
@@ -155,7 +159,6 @@ const UsersList = () => {
     { id: 'email', label: 'Email', minWidth: 150 },
     { id: 'phoneNumber', label: 'Phone Number', minWidth: 160 },
     { id: 'rights', label: 'Rights', minWidth: 80 },
-
     { id: 'actions', label: 'Actions', minWidth: 100 },
   ]
 
@@ -208,11 +211,17 @@ const UsersList = () => {
                     {user.isAdmin ? 'Admin' : 'User'}
                   </Typography>
                 </TableCell>
-
                 <TableCell sx={{ padding: '8px' }}>
                   <IconButton
-                    onClick={() => handleEditClick(user)}
+                    onClick={() => navigate(`/users/${user._id}`)}
+                    // onClick={() => console.log(`/users/${user._id}`)}
                     sx={{ color: green[600] }}
+                  >
+                    <RemoveRedEyeIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleEditClick(user)}
+                    sx={{ color: blue[600] }}
                     disabled={user.token !== currentUserToken && user.isAdmin}
                   >
                     <EditIcon />

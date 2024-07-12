@@ -1,0 +1,10 @@
+.profilePage {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+}
+.profileButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}

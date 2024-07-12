@@ -12,7 +12,10 @@ const HomePage = () => {
   useEffect(() => {
     const validPaths = ['/', '/companies', '/users/userslist', '/profile']
 
-    const dynamicPaths = [/^\/companies\/[0-9a-fA-F]{24}$/]
+    const dynamicPaths = [
+      /^\/companies\/[0-9a-fA-F]{24}$/,
+      /^\/users\/[0-9a-fA-F]{24}$/,
+    ]
 
     const isPathValid =
       validPaths.includes(location.pathname) ||

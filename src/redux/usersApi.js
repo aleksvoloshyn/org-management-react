@@ -32,6 +32,11 @@ export const usersApi = createApi({
       query: () => 'profile',
       providesTags: ['UserProfile'],
     }),
+    // GET USER  BY ID
+    getUserById: builder.query({
+      query: (id) => `/${id}`,
+      providesTags: ['UserProfile'],
+    }),
     // UPDATE USER PROFILE
     updateProfile: builder.mutation({
       query: ({ _id, ...userData }) => ({
@@ -58,4 +63,5 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useDeleteUserMutation,
+  useGetUserByIdQuery,
 } = usersApi
