@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 
 import Board from '../../components/Board/Board'
@@ -7,19 +7,22 @@ import css from './homePage.module.scss'
 
 const HomePage = () => {
   const navigate = useNavigate()
+  const location = useLocation()
 
-  // useEffect(() => {
-  //   const validPaths = [
-  //     '/',
-  //     '/companies',
-  //     '/users/userslist',
-  //     '/profile',
-  //     '/companies/:id ',
-  //   ]
-  //   if (!validPaths.includes(location.pathname)) {
-  //     navigate('/not-found')
-  //   }
-  // }, [navigate])
+  useEffect(() => {
+    const validPaths = ['/', '/companies', '/users/userslist', '/profile']
+
+    const dynamicPaths = [/^\/companies\/[0-9a-fA-F]{24}$/]
+
+    const isPathValid =
+      validPaths.includes(location.pathname) ||
+      dynamicPaths.some((regex) => regex.test(location.pathname))
+
+    if (!isPathValid) {
+      navigate('/not-found')
+    }
+  }, [location.pathname, navigate])
+
   return (
     <div className={css.homePage}>
       <Sidebar />
