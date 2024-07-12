@@ -129,7 +129,12 @@ const CompanyDetails = () => {
           <strong>Type:</strong> {company.type}
         </Typography>
         <Box
-          sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: 1,
+            mt: 2,
+          }}
         >
           <Button
             variant="contained"
@@ -139,12 +144,15 @@ const CompanyDetails = () => {
             <KeyboardBackspaceIcon />
             Back
           </Button>
-          <IconButton onClick={handleEditClick} sx={{ color: 'blue' }}>
-            <EditIcon />
-          </IconButton>
-          <IconButton onClick={handleDeleteDialogOpen} sx={{ color: 'red' }}>
-            <DeleteIcon />
-          </IconButton>
+          <span>
+            {' '}
+            <IconButton onClick={handleEditClick} sx={{ color: 'blue' }}>
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={handleDeleteDialogOpen} sx={{ color: 'red' }}>
+              <DeleteIcon />
+            </IconButton>
+          </span>
         </Box>
       </Paper>
 
