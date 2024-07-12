@@ -12,6 +12,7 @@ import css from './tools.module.scss'
 const Tools = () => {
   const location = useLocation()
   const [currentPage, setCurrentPage] = useState(location.pathname.slice(1))
+  console.log(location.pathname)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()

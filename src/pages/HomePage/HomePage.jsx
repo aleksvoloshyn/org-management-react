@@ -8,12 +8,18 @@ import css from './homePage.module.scss'
 const HomePage = () => {
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const validPaths = ['/', '/companies', '/users/userslist', '/profile']
-    if (!validPaths.includes(location.pathname)) {
-      navigate('/not-found')
-    }
-  }, [navigate])
+  // useEffect(() => {
+  //   const validPaths = [
+  //     '/',
+  //     '/companies',
+  //     '/users/userslist',
+  //     '/profile',
+  //     '/companies/:id ',
+  //   ]
+  //   if (!validPaths.includes(location.pathname)) {
+  //     navigate('/not-found')
+  //   }
+  // }, [navigate])
   return (
     <div className={css.homePage}>
       <Sidebar />

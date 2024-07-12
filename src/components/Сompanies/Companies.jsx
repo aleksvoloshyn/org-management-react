@@ -23,9 +23,11 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material'
-import { green, red } from '@mui/material/colors'
+import { green, red, blue } from '@mui/material/colors'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import { useNavigate } from 'react-router-dom'
 
 import {
   useGetCompaniesQuery,
@@ -36,24 +38,29 @@ import {
 } from '../../redux/companiesApi'
 
 const Companies = () => {
-  const [open, setOpen] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
+  const navigate = useNavigate()
+  const [openAddModal, setOpenAddModal] = useState(false)
+  const [openEditModal, setOpenEditModal] = useState(false)
   const [selectedCompany, setSelectedCompany] = useState(null)
   const [modalError, setModalError] = useState(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [companyToDelete, setCompanyToDelete] = useState(null)
 
-  // cettinG current user
   const {
     data: currentUser,
     error: currentUserError,
     isLoading: isCurrentUserLoading,
   } = useGetCurrentUserQuery()
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => {
-    setOpen(false)
-    setIsEditing(false)
+  const handleOpenAddModal = () => setOpenAddModal(true)
+  const handleCloseAddModal = () => {
+    setOpenAddModal(false)
+    setModalError(null)
+  }
+
+  const handleOpenEditModal = () => setOpenEditModal(true)
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false)
     setSelectedCompany(null)
     setModalError(null)
   }
@@ -86,13 +93,11 @@ const Companies = () => {
 
   const companiesData = isAdmin ? companiesAdmin : companies
 
-  // console.log(companiesData)
-
   const [addCompany] = useAddCompanyMutation()
   const [updateCompany] = useUpdateCompanyMutation()
   const [deleteCompany] = useDeleteCompanyMutation()
 
-  const formik = useFormik({
+  const formikAdd = useFormik({
     initialValues: {
       name: '',
       address: '',
@@ -111,13 +116,40 @@ const Companies = () => {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
-        if (isEditing && selectedCompany) {
+        await addCompany(values).unwrap()
+        resetForm()
+        handleCloseAddModal()
+      } catch (err) {
+        setModalError('Failed to save company')
+        console.error('Failed to save company:', err)
+      }
+    },
+  })
+
+  const formikEdit = useFormik({
+    initialValues: {
+      name: '',
+      address: '',
+      serviceOfActivity: '',
+      numberOfEmployees: '',
+      description: '',
+      type: '',
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required('Required'),
+      address: Yup.string().required('Required'),
+      serviceOfActivity: Yup.string().required('Required'),
+      numberOfEmployees: Yup.string().required('Required'),
+      description: Yup.string().required('Required'),
+      type: Yup.string().required('Required'),
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        if (selectedCompany) {
           await updateCompany({ id: selectedCompany._id, ...values }).unwrap()
-        } else {
-          await addCompany(values).unwrap()
         }
         resetForm()
-        handleClose()
+        handleCloseEditModal()
       } catch (err) {
         setModalError('Failed to save company')
         console.error('Failed to save company:', err)
@@ -128,7 +160,7 @@ const Companies = () => {
 
   const handleEditClick = (company) => {
     setSelectedCompany(company)
-    formik.setValues({
+    formikEdit.setValues({
       name: company.name,
       address: company.address,
       serviceOfActivity: company.serviceOfActivity,
@@ -136,8 +168,7 @@ const Companies = () => {
       description: company.description,
       type: company.type,
     })
-    setIsEditing(true)
-    handleOpen()
+    handleOpenEditModal()
   }
 
   const handleDeleteClick = async () => {
@@ -147,6 +178,10 @@ const Companies = () => {
     } catch (err) {
       console.error('Failed to delete company:', err)
     }
+  }
+
+  const handleDetailsClick = (id) => {
+    navigate(`/companies/${id}`)
   }
 
   if (
@@ -165,7 +200,7 @@ const Companies = () => {
     { id: 'numberOfEmployees', label: 'Employees', minWidth: 80 },
     { id: 'description', label: 'Description', minWidth: 200 },
     { id: 'type', label: 'Type', minWidth: 100 },
-    { id: 'actions', label: 'Actions', minWidth: 100 },
+    { id: 'actions', label: 'Actions', minWidth: 150 },
   ]
 
   const sortedCompanies = companiesData.slice().sort((a, b) => {
@@ -179,7 +214,7 @@ const Companies = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={handleOpen}
+        onClick={handleOpenAddModal}
         sx={{ display: 'block', mb: 3 }}
       >
         + Add New Company
@@ -237,8 +272,14 @@ const Companies = () => {
                 <TableCell sx={{ padding: '8px' }}>{company.type}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>
                   <IconButton
-                    onClick={() => handleEditClick(company)}
+                    onClick={() => handleDetailsClick(company._id)}
                     sx={{ color: green[600] }}
+                  >
+                    <RemoveRedEyeIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleEditClick(company)}
+                    sx={{ color: blue[600] }}
                   >
                     <EditIcon />
                   </IconButton>
@@ -256,49 +297,51 @@ const Companies = () => {
       </TableContainer>
 
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={openAddModal}
+        onClose={handleCloseAddModal}
         aria-labelledby="add-company-modal-title"
         aria-describedby="add-company-modal-description"
       >
         <Box sx={modalBoxStyle}>
           <Typography id="add-company-modal-title" variant="h6" component="h2">
-            {isEditing ? 'Edit Company' : 'Add New Company'}
+            Add New Company
           </Typography>
-          <form onSubmit={formik.handleSubmit} style={addCompanyFormStyle}>
+          <form onSubmit={formikAdd.handleSubmit} style={addCompanyFormStyle}>
             {modalError && <Typography color="error">{modalError}</Typography>}
             <TextField
               name="name"
               label="Company Name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
+              value={formikAdd.values.name}
+              onChange={formikAdd.handleChange}
+              error={formikAdd.touched.name && Boolean(formikAdd.errors.name)}
+              helperText={formikAdd.touched.name && formikAdd.errors.name}
               fullWidth
               margin="normal"
             />
             <TextField
               name="address"
               label="Address"
-              value={formik.values.address}
-              onChange={formik.handleChange}
-              error={formik.touched.address && Boolean(formik.errors.address)}
-              helperText={formik.touched.address && formik.errors.address}
+              value={formikAdd.values.address}
+              onChange={formikAdd.handleChange}
+              error={
+                formikAdd.touched.address && Boolean(formikAdd.errors.address)
+              }
+              helperText={formikAdd.touched.address && formikAdd.errors.address}
               fullWidth
               margin="normal"
             />
             <TextField
               name="serviceOfActivity"
               label="Service of Activity"
-              value={formik.values.serviceOfActivity}
-              onChange={formik.handleChange}
+              value={formikAdd.values.serviceOfActivity}
+              onChange={formikAdd.handleChange}
               error={
-                formik.touched.serviceOfActivity &&
-                Boolean(formik.errors.serviceOfActivity)
+                formikAdd.touched.serviceOfActivity &&
+                Boolean(formikAdd.errors.serviceOfActivity)
               }
               helperText={
-                formik.touched.serviceOfActivity &&
-                formik.errors.serviceOfActivity
+                formikAdd.touched.serviceOfActivity &&
+                formikAdd.errors.serviceOfActivity
               }
               fullWidth
               margin="normal"
@@ -306,15 +349,15 @@ const Companies = () => {
             <TextField
               name="numberOfEmployees"
               label="Number of Employees"
-              value={formik.values.numberOfEmployees}
-              onChange={formik.handleChange}
+              value={formikAdd.values.numberOfEmployees}
+              onChange={formikAdd.handleChange}
               error={
-                formik.touched.numberOfEmployees &&
-                Boolean(formik.errors.numberOfEmployees)
+                formikAdd.touched.numberOfEmployees &&
+                Boolean(formikAdd.errors.numberOfEmployees)
               }
               helperText={
-                formik.touched.numberOfEmployees &&
-                formik.errors.numberOfEmployees
+                formikAdd.touched.numberOfEmployees &&
+                formikAdd.errors.numberOfEmployees
               }
               fullWidth
               margin="normal"
@@ -322,13 +365,14 @@ const Companies = () => {
             <TextField
               name="description"
               label="Description"
-              value={formik.values.description}
-              onChange={formik.handleChange}
+              value={formikAdd.values.description}
+              onChange={formikAdd.handleChange}
               error={
-                formik.touched.description && Boolean(formik.errors.description)
+                formikAdd.touched.description &&
+                Boolean(formikAdd.errors.description)
               }
               helperText={
-                formik.touched.description && formik.errors.description
+                formikAdd.touched.description && formikAdd.errors.description
               }
               fullWidth
               margin="normal"
@@ -336,10 +380,10 @@ const Companies = () => {
             <TextField
               name="type"
               label="Type"
-              value={formik.values.type}
-              onChange={formik.handleChange}
-              error={formik.touched.type && Boolean(formik.errors.type)}
-              helperText={formik.touched.type && formik.errors.type}
+              value={formikAdd.values.type}
+              onChange={formikAdd.handleChange}
+              error={formikAdd.touched.type && Boolean(formikAdd.errors.type)}
+              helperText={formikAdd.touched.type && formikAdd.errors.type}
               fullWidth
               margin="normal"
             />
@@ -350,7 +394,113 @@ const Companies = () => {
               fullWidth
               sx={{ mt: 2 }}
             >
-              {isEditing ? 'Update Company' : 'Add Company'}
+              Add Company
+            </Button>
+          </form>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openEditModal}
+        onClose={handleCloseEditModal}
+        aria-labelledby="edit-company-modal-title"
+        aria-describedby="edit-company-modal-description"
+      >
+        <Box sx={modalBoxStyle}>
+          <Typography id="edit-company-modal-title" variant="h6" component="h2">
+            Edit Company
+          </Typography>
+          <form onSubmit={formikEdit.handleSubmit} style={addCompanyFormStyle}>
+            {modalError && <Typography color="error">{modalError}</Typography>}
+            <TextField
+              name="name"
+              label="Company Name"
+              value={formikEdit.values.name}
+              onChange={formikEdit.handleChange}
+              error={formikEdit.touched.name && Boolean(formikEdit.errors.name)}
+              helperText={formikEdit.touched.name && formikEdit.errors.name}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="address"
+              label="Address"
+              value={formikEdit.values.address}
+              onChange={formikEdit.handleChange}
+              error={
+                formikEdit.touched.address && Boolean(formikEdit.errors.address)
+              }
+              helperText={
+                formikEdit.touched.address && formikEdit.errors.address
+              }
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="serviceOfActivity"
+              label="Service of Activity"
+              value={formikEdit.values.serviceOfActivity}
+              onChange={formikEdit.handleChange}
+              error={
+                formikEdit.touched.serviceOfActivity &&
+                Boolean(formikEdit.errors.serviceOfActivity)
+              }
+              helperText={
+                formikEdit.touched.serviceOfActivity &&
+                formikEdit.errors.serviceOfActivity
+              }
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="numberOfEmployees"
+              label="Number of Employees"
+              value={formikEdit.values.numberOfEmployees}
+              onChange={formikEdit.handleChange}
+              error={
+                formikEdit.touched.numberOfEmployees &&
+                Boolean(formikEdit.errors.numberOfEmployees)
+              }
+              helperText={
+                formikEdit.touched.numberOfEmployees &&
+                formikEdit.errors.numberOfEmployees
+              }
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="description"
+              label="Description"
+              value={formikEdit.values.description}
+              onChange={formikEdit.handleChange}
+              error={
+                formikEdit.touched.description &&
+                Boolean(formikEdit.errors.description)
+              }
+              helperText={
+                formikEdit.touched.description && formikEdit.errors.description
+              }
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="type"
+              label="Type"
+              value={formikEdit.values.type}
+              onChange={formikEdit.handleChange}
+              error={formikEdit.touched.type && Boolean(formikEdit.errors.type)}
+              helperText={formikEdit.touched.type && formikEdit.errors.type}
+              fullWidth
+              margin="normal"
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
+              Update Company
             </Button>
           </form>
         </Box>

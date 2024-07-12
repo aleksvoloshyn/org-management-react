@@ -5,6 +5,7 @@ import css from './board.module.scss'
 import UsersListPage from '../../pages/UsersListPage'
 import NotFoundPage from './../../pages/NotFoundPage'
 import ProfilePage from '../../pages/ProfilePage'
+import CompanyDetails from './../CompanyDetails'
 import ProtectedRouteAdmin from '../ProtectedRoutes/ProtectedRouteAdmin'
 
 const Board = () => {
@@ -13,6 +14,8 @@ const Board = () => {
       <Toolbar />
       <Routes>
         <Route path="/companies" element={<CompaniesPage />} />
+        <Route path="/companies/:id" element={<CompanyDetails />} />
+
         <Route
           path="/users/userslist"
           element={<ProtectedRouteAdmin element={UsersListPage} adminOnly />}
