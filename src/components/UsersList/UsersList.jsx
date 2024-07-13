@@ -152,14 +152,14 @@ const UsersList = () => {
   if (error) return <Typography color="error">Error loading users</Typography>
 
   const columns = [
-    { id: 'fullName', label: 'Full Name', minWidth: 150 },
-    { id: 'nickName', label: 'Nickname', minWidth: 100 },
-    { id: 'description', label: 'Description', minWidth: 160 },
-    { id: 'position', label: 'Position', minWidth: 120 },
+    { id: 'fullName', label: 'Full Name', minWidth: 130 },
+    { id: 'nickName', label: 'Nickname', minWidth: 110 },
+    { id: 'description', label: 'Description', minWidth: 150 },
+    { id: 'position', label: 'Position', minWidth: 100 },
     { id: 'email', label: 'Email', minWidth: 150 },
     { id: 'phoneNumber', label: 'Phone Number', minWidth: 160 },
     { id: 'rights', label: 'Rights', minWidth: 80 },
-    { id: 'actions', label: 'Actions', minWidth: 100 },
+    { id: 'actions', label: 'Actions', minWidth: 150 },
   ]
 
   return (

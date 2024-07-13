@@ -196,7 +196,7 @@ const Companies = () => {
   const columns = [
     { id: 'name', label: 'Name', minWidth: 150 },
     { id: 'address', label: 'Address', minWidth: 120 },
-    { id: 'serviceOfActivity', label: 'Service of Activity', minWidth: 200 },
+    { id: 'serviceOfActivity', label: 'Service of Activity', minWidth: 150 },
     { id: 'numberOfEmployees', label: 'Employees', minWidth: 80 },
     { id: 'description', label: 'Description', minWidth: 200 },
     { id: 'type', label: 'Type', minWidth: 100 },
@@ -220,10 +220,7 @@ const Companies = () => {
         + Add New Company
       </Button>
 
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: '80vh', overflowY: 'auto' }}
-      >
+      <TableContainer component={Paper} sx={{ overflowY: 'auto' }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -243,7 +240,7 @@ const Companies = () => {
           <TableBody>
             {sortedCompanies.map((company) => (
               <TableRow key={company._id}>
-                <TableCell sx={{ padding: '8px' }}>
+                <TableCell sx={{ padding: '8px', fontSize: '1 em' }}>
                   {company.name}
                   <Typography
                     variant="body2"
