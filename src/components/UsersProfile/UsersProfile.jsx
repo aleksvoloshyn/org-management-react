@@ -15,59 +15,18 @@ import {
   CardContent,
 } from '@mui/material'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
+import { useNavigate, useParams } from 'react-router-dom'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
+import { useStyles } from './styles'
+import { validationSchema } from './validationSchema'
+import { handleDelete, handleSubmit } from './handlers'
 import {
   useGetUserByIdQuery,
   useUpdateProfileMutation,
   useDeleteUserMutation,
 } from '../../redux/usersApi'
-import { useNavigate, useParams } from 'react-router-dom'
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
-import { makeStyles } from '@material-ui/core/styles'
 import userPic from './../../assets/userpic.png'
 import css from './usersProfile.module.scss'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '50px',
-    width: '60%',
-    height: '100%',
-    margin: '20px auto',
-    padding: theme.spacing(3),
-    textAlign: 'center',
-    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
-    borderRadius: theme.shape.borderRadius,
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    marginBottom: theme.spacing(1),
-  },
-  info: {
-    fontSize: '1rem',
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
-    '&:last-child': {
-      marginBottom: 0,
-    },
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
-  dialogContent: {
-    padding: theme.spacing(3),
-  },
-  dialogForm: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-  },
-  textField: {
-    marginBottom: theme.spacing(2),
-  },
-}))
 
 const UsersProfile = () => {
   const classes = useStyles()
@@ -75,10 +34,7 @@ const UsersProfile = () => {
   const { data: profile, error, isLoading } = useGetUserByIdQuery(id)
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
-
   const navigate = useNavigate()
-
-  // console.log(profile)
 
   const [open, setOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -93,41 +49,10 @@ const UsersProfile = () => {
       email: profile?.email || '',
       phone_number: profile?.phone_number || '',
     },
-    validationSchema: Yup.object({
-      first_name: Yup.string().required('First name is required'),
-      last_name: Yup.string().required('Last name is required'),
-      email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-      phone_number: Yup.string().required('Phone number is required'),
-    }),
-    onSubmit: async (values) => {
-      try {
-        if (profile?._id) {
-          await updateProfile({ _id: profile._id, ...values }).unwrap()
-          setOpen(false)
-        } else {
-          console.error('User ID (_id) is missing')
-        }
-      } catch (error) {
-        console.error('Failed to update profile', error)
-      }
-    },
+    validationSchema,
+    onSubmit: (values) => handleSubmit(values, profile, updateProfile, setOpen),
     enableReinitialize: true,
   })
-
-  const handleDelete = async () => {
-    try {
-      if (profile?._id) {
-        await deleteUser({ id: profile._id }).unwrap()
-        navigate('/users')
-      } else {
-        console.error('User ID (_id) is missing')
-      }
-    } catch (error) {
-      console.error('Failed to delete profile', error)
-    }
-  }
 
   if (isLoading) return <CircularProgress />
   if (error) {
@@ -340,7 +265,11 @@ const UsersProfile = () => {
           <Button onClick={() => setConfirmDelete(false)} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="warning" disabled={isDeleting}>
+          <Button
+            onClick={() => handleDelete(profile, deleteUser, navigate)}
+            color="warning"
+            disabled={isDeleting}
+          >
             {isDeleting ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
