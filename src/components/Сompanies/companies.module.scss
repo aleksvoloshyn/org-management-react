@@ -1,0 +1,87 @@
+/* companies.module.scss */
+
+/* Основной контейнер */
+.companies {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Отступы между элементами */
+  padding: 16px;
+  height: 100%; /* Использовать всю высоту */
+  box-sizing: border-box;
+  border: 1px solid green;
+}
+
+/* Кнопка добавления компании */
+button {
+  align-self: flex-end; /* Выравнивание кнопки по левому краю */
+}
+
+/* Модальное окно */
+.modalBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: #fff;
+  border: 2px solid #000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Лёгкая тень */
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Форма добавления компании */
+.addCompanyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Обёртка таблицы */
+.dataGridBox {
+  flex-grow: 1;
+  display: flex;
+  overflow: auto;
+}
+
+/* Переключение стилей таблицы */
+.dataGridBox .MuiDataGrid-root {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Лёгкая тень */
+}
+
+.dataGridBox .MuiDataGrid-toolbar {
+  background-color: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+}
+
+.dataGridBox .MuiDataGrid-cell,
+.dataGridBox .MuiDataGrid-columnHeader {
+  padding: 8px;
+}
+
+/* Стили для ячеек */
+.dataGridBox .MuiDataGrid-cell {
+  align-items: center;
+  justify-content: center;
+}
+
+.dataGridBox .MuiDataGrid-columnHeader {
+  font-weight: bold;
+}
+
+/* Таблица для мобильных устройств */
+@media (max-width: 600px) {
+  .companies {
+    padding: 8px;
+  }
+  .modalBox {
+    width: 90%;
+  }
+  .dataGridBox {
+    padding: 8px;
+  }
+}
