@@ -1,7 +1,3 @@
-import { useState } from 'react'
-import { useGetCurrentUserQuery } from '../../redux/usersApi'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
 import {
   CircularProgress,
   Table,
@@ -27,53 +23,41 @@ import { green, red, blue } from '@mui/material/colors'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import { useNavigate } from 'react-router-dom'
-
 import {
   useGetCompaniesQuery,
-  useAddCompanyMutation,
-  useUpdateCompanyMutation,
-  useDeleteCompanyMutation,
   useGetCompaniesAdminQuery,
+  useDeleteCompanyMutation,
 } from '../../redux/companiesApi'
+import { useCompanyHandlers } from './useCompanyHandlers'
+import { useCompanyForm } from './useCompanyForm'
+
 
 const Companies = () => {
-  const navigate = useNavigate()
-  const [openAddModal, setOpenAddModal] = useState(false)
-  const [openEditModal, setOpenEditModal] = useState(false)
-  const [selectedCompany, setSelectedCompany] = useState(null)
-  const [modalError, setModalError] = useState(null)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [companyToDelete, setCompanyToDelete] = useState(null)
-
   const {
-    data: currentUser,
-    error: currentUserError,
-    isLoading: isCurrentUserLoading,
-  } = useGetCurrentUserQuery()
+    currentUser,
+    isCurrentUserLoading,
+    currentUserError,
+    openAddModal,
+    openEditModal,
+    selectedCompany,
+    modalError,
+    deleteDialogOpen,
+    companyToDelete,
+    handleOpenAddModal,
+    handleCloseAddModal,
 
-  const handleOpenAddModal = () => setOpenAddModal(true)
-  const handleCloseAddModal = () => {
-    setOpenAddModal(false)
-    setModalError(null)
-  }
+    handleCloseEditModal,
+    handleDeleteDialogOpen,
+    handleDeleteDialogClose,
+    handleEditClick,
+    handleDetailsClick,
+  } = useCompanyHandlers()
 
-  const handleOpenEditModal = () => setOpenEditModal(true)
-  const handleCloseEditModal = () => {
-    setOpenEditModal(false)
-    setSelectedCompany(null)
-    setModalError(null)
-  }
-
-  const handleDeleteDialogOpen = (id) => {
-    setCompanyToDelete(id)
-    setDeleteDialogOpen(true)
-  }
-
-  const handleDeleteDialogClose = () => {
-    setCompanyToDelete(null)
-    setDeleteDialogOpen(false)
-  }
+  const { formikAdd, formikEdit } = useCompanyForm(
+    handleCloseAddModal,
+    handleCloseEditModal,
+    selectedCompany
+  )
 
   const isAdmin = currentUser?.isAdmin
 
@@ -93,83 +77,7 @@ const Companies = () => {
 
   const companiesData = isAdmin ? companiesAdmin : companies
 
-  const [addCompany] = useAddCompanyMutation()
-  const [updateCompany] = useUpdateCompanyMutation()
   const [deleteCompany] = useDeleteCompanyMutation()
-
-  const formikAdd = useFormik({
-    initialValues: {
-      name: '',
-      address: '',
-      serviceOfActivity: '',
-      numberOfEmployees: '',
-      description: '',
-      type: '',
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required('Required'),
-      address: Yup.string().required('Required'),
-      serviceOfActivity: Yup.string().required('Required'),
-      numberOfEmployees: Yup.string().required('Required'),
-      description: Yup.string().required('Required'),
-      type: Yup.string().required('Required'),
-    }),
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        await addCompany(values).unwrap()
-        resetForm()
-        handleCloseAddModal()
-      } catch (err) {
-        setModalError('Failed to save company')
-        console.error('Failed to save company:', err)
-      }
-    },
-  })
-
-  const formikEdit = useFormik({
-    initialValues: {
-      name: '',
-      address: '',
-      serviceOfActivity: '',
-      numberOfEmployees: '',
-      description: '',
-      type: '',
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required('Required'),
-      address: Yup.string().required('Required'),
-      serviceOfActivity: Yup.string().required('Required'),
-      numberOfEmployees: Yup.string().required('Required'),
-      description: Yup.string().required('Required'),
-      type: Yup.string().required('Required'),
-    }),
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        if (selectedCompany) {
-          await updateCompany({ id: selectedCompany._id, ...values }).unwrap()
-        }
-        resetForm()
-        handleCloseEditModal()
-      } catch (err) {
-        setModalError('Failed to save company')
-        console.error('Failed to save company:', err)
-      }
-    },
-    enableReinitialize: true,
-  })
-
-  const handleEditClick = (company) => {
-    setSelectedCompany(company)
-    formikEdit.setValues({
-      name: company.name,
-      address: company.address,
-      serviceOfActivity: company.serviceOfActivity,
-      numberOfEmployees: company.numberOfEmployees,
-      description: company.description,
-      type: company.type,
-    })
-    handleOpenEditModal()
-  }
 
   const handleDeleteClick = async () => {
     try {
@@ -178,10 +86,6 @@ const Companies = () => {
     } catch (err) {
       console.error('Failed to delete company:', err)
     }
-  }
-
-  const handleDetailsClick = (id) => {
-    navigate(`/companies/${id}`)
   }
 
   if (
@@ -227,10 +131,7 @@ const Companies = () => {
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
-                  sx={{
-                    fontWeight: 'bold',
-                    minWidth: column.minWidth,
-                  }}
+                  sx={{ fontWeight: 'bold', minWidth: column.minWidth }}
                 >
                   {column.label}
                 </TableCell>
@@ -275,7 +176,7 @@ const Companies = () => {
                     <RemoveRedEyeIcon />
                   </IconButton>
                   <IconButton
-                    onClick={() => handleEditClick(company)}
+                    onClick={() => handleEditClick(company, formikEdit)}
                     sx={{ color: blue[600] }}
                   >
                     <EditIcon />
