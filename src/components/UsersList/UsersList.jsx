@@ -377,6 +377,7 @@ const UsersList = () => {
         </Dialog>
       )}
 
+      {/* ADD NEW USER */}
       <Dialog
         open={openAddUser}
         onClose={handleCloseAddUser}
@@ -506,6 +507,7 @@ const UsersList = () => {
         </Formik>
       </Dialog>
 
+      {/* DELETE DIALOG */}
       <Dialog
         open={deleteDialogOpen}
         onClose={handleDeleteDialogClose}
