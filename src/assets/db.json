@@ -1,145 +1,123 @@
 [
   {
-    "name": "Alpha Inc.",
-    "address": "1234 Elm Street, Springfield",
-    "serviceOfActivity": "Software Development",
-    "numberOfEmployees": "50",
-    "description": "Specializes in custom software solutions.",
-    "type": "Private",
+    "name": "Aries",
+    "address": "123 Zodiac Ave, Astrologia",
+    "serviceOfActivity": "Astrology Services",
+    "numberOfEmployees": "12",
+    "description": "Providing astrological readings and consultations.",
+    "type": "Astrology",
     "owner": {
-      "$oid": "668bb855d7035d795911dfcc"
+      "$oid": "669257b985f042414536624c"
     }
   },
   {
-    "name": "Beta LLC",
-    "address": "4321 Oak Avenue, Capital City",
-    "serviceOfActivity": "Consulting",
-    "numberOfEmployees": "30",
-    "description": "Provides business consulting services.",
-    "type": "LLC",
+    "name": "Taurus",
+    "address": "456 Constellation St, Celestia",
+    "serviceOfActivity": "Astronomy Education",
+    "numberOfEmployees": "15",
+    "description": "Educational programs on constellations.",
+    "type": "Education",
     "owner": {
-      "$oid": "668bb855d7035d795911dfcc"
+      "$oid": "669257b985f042414536624c"
     }
   },
   {
-    "name": "Gamma Corp.",
-    "address": "5678 Pine Road, Shelbyville",
-    "serviceOfActivity": "Marketing",
-    "numberOfEmployees": "70",
-    "description": "Offers marketing and advertising services.",
-    "type": "Corporation",
+    "name": "Gemini",
+    "address": "789 Stars Blvd, Galaxy",
+    "serviceOfActivity": "Horoscope Creation",
+    "numberOfEmployees": "10",
+    "description": "Creating personalized horoscopes.",
+    "type": "Astrology",
     "owner": {
-      "$oid": "668bb855d7035d795911dfcc"
+      "$oid": "669257b985f042414536624c"
     }
   },
   {
-    "name": "Delta Co.",
-    "address": "8765 Birch Lane, Springfield",
-    "serviceOfActivity": "Financial Services",
-    "numberOfEmployees": "40",
-    "description": "Provides financial advisory and investment services.",
-    "type": "Private",
+    "name": "Cancer",
+    "address": "101 Moon Way, Universe",
+    "serviceOfActivity": "Wellness Retreats",
+    "numberOfEmployees": "20",
+    "description": "Hosting wellness retreats and workshops.",
+    "type": "Wellness",
     "owner": {
-      "$oid": "668bb855d7035d795911dfcc"
+      "$oid": "668bc9dbd7035d795911e1ba"
     }
   },
   {
-    "name": "Epsilon Ltd.",
-    "address": "2345 Maple Avenue, Capital City",
-    "serviceOfActivity": "Healthcare",
-    "numberOfEmployees": "60",
-    "description": "Offers healthcare management and services.",
-    "type": "Limited",
-    "owner": {
-      "$oid": "668a9603f996dba45f0de27f"
-    }
-  },
-  {
-    "name": "Zeta Enterprises",
-    "address": "9876 Cedar Street, Shelbyville",
-    "serviceOfActivity": "Education",
-    "numberOfEmployees": "80",
-    "description": "Provides educational programs and materials.",
-    "type": "Corporation",
-    "owner": {
-      "$oid": "668a9603f996dba45f0de27f"
-    }
-  },
-  {
-    "name": "Eta Services",
-    "address": "3456 Willow Road, Springfield",
-    "serviceOfActivity": "Transportation",
-    "numberOfEmployees": "100",
-    "description": "Offers logistics and transportation services.",
-    "type": "Private",
-    "owner": {
-      "$oid": "668b0c190b0a56022fb7146f"
-    }
-  },
-  {
-    "name": "Theta Solutions",
-    "address": "6543 Spruce Avenue, Capital City",
-    "serviceOfActivity": "IT Services",
-    "numberOfEmployees": "120",
-    "description": "Provides IT support and solutions.",
-    "type": "LLC",
-    "owner": {
-      "$oid": "668b0c190b0a56022fb7146f"
-    }
-  },
-  {
-    "name": "Iota Technologies",
-    "address": "1234 Poplar Street, Shelbyville",
-    "serviceOfActivity": "Engineering",
-    "numberOfEmployees": "150",
-    "description": "Specializes in engineering solutions and consulting.",
-    "type": "Corporation",
-    "owner": {
-      "$oid": "668b91a0d7035d795911dd7a"
-    }
-  },
-  {
-    "name": "Kappa Innovations",
-    "address": "7890 Chestnut Lane, Springfield",
-    "serviceOfActivity": "Research",
-    "numberOfEmployees": "200",
-    "description": "Focuses on innovative research and development.",
-    "type": "Private",
-    "owner": {
-      "$oid": "668b91a0d7035d795911dd7a"
-    }
-  },
-  {
-    "name": "Lambda Ventures",
-    "address": "4567 Redwood Avenue, Capital City",
-    "serviceOfActivity": "Investment",
+    "name": "Leo",
+    "address": "202 Solar St, Cosmos",
+    "serviceOfActivity": "Astrology Services",
     "numberOfEmployees": "25",
-    "description": "Invests in emerging markets and startups.",
-    "type": "LLC",
+    "description": "Astrology services for self-discovery.",
+    "type": "Astrology",
+    "owner": {
+      "$oid": "668bc9dbd7035d795911e1ba"
+    }
+  },
+  {
+    "name": "Virgo",
+    "address": "303 Planet Ln, Astrologia",
+    "serviceOfActivity": "Astrology Counseling",
+    "numberOfEmployees": "18",
+    "description": "Astrology counseling and guidance.",
+    "type": "Counseling",
+    "owner": {
+      "$oid": "668bc9dbd7035d795911e1ba"
+    }
+  },
+  {
+    "name": "Libra",
+    "address": "404 Star Park, Galaxy",
+    "serviceOfActivity": "Balance and Harmony Workshops",
+    "numberOfEmployees": "22",
+    "description": "Workshops for achieving balance and harmony.",
+    "type": "Workshops",
     "owner": {
       "$oid": "668bc9b5d7035d795911e1b6"
     }
   },
   {
-    "name": "Mu Holdings",
-    "address": "8910 Fir Street, Shelbyville",
-    "serviceOfActivity": "Real Estate",
+    "name": "Scorpio",
+    "address": "505 Cosmic Blvd, Universe",
+    "serviceOfActivity": "Astrology Services",
+    "numberOfEmployees": "16",
+    "description": "Intuitive astrology readings.",
+    "type": "Astrology",
+    "owner": {
+      "$oid": "668bc9b5d7035d795911e1b6"
+    }
+  },
+  {
+    "name": "Sagittarius",
+    "address": "606 Zodiac Ln, Cosmos",
+    "serviceOfActivity": "Adventure Travel",
+    "numberOfEmployees": "30",
+    "description": "Adventure travel planning and experiences.",
+    "type": "Travel",
+    "owner": {
+      "$oid": "668bc9b5d7035d795911e1b6"
+    }
+  },
+  {
+    "name": "Capricorn",
+    "address": "707 Constellation St, Celestia",
+    "serviceOfActivity": "Career Guidance",
+    "numberOfEmployees": "28",
+    "description": "Astrology-based career guidance services.",
+    "type": "Career",
+    "owner": {
+      "$oid": "668bb855d7035d795911dfcc"
+    }
+  },
+  {
+    "name": "Aquarius",
+    "address": "808 Neptune St, Astrologia",
+    "serviceOfActivity": "Innovative Solutions",
     "numberOfEmployees": "35",
-    "description": "Manages and develops real estate properties.",
-    "type": "Corporation",
+    "description": "Providing innovative and futuristic solutions.",
+    "type": "Innovation",
     "owner": {
-      "$oid": "668bc9b5d7035d795911e1b6"
-    }
-  },
-  {
-    "name": "Nu Enterprises",
-    "address": "1236 Pine Lane, Springfield",
-    "serviceOfActivity": "Construction",
-    "numberOfEmployees": "55",
-    "description": "Provides construction and building services.",
-    "type": "Private",
-    "owner": {
-      "$oid": "668bc9b5d7035d795911e1b6"
+      "$oid": "668bb855d7035d795911dfcc"
     }
   }
 ]

@@ -17,16 +17,15 @@ import {
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import {
-  useGetProfileQuery,
+  useGetUserByIdQuery,
   useUpdateProfileMutation,
   useDeleteUserMutation,
-  useGetCurrentUserQuery,
 } from '../../redux/usersApi'
-
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
 import { makeStyles } from '@material-ui/core/styles'
 import userPic from './../../assets/userpic.png'
-import css from './profile.module.scss'
+import css from './usersProfile.module.scss'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,23 +69,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Profile = () => {
+const UsersProfile = () => {
   const classes = useStyles()
-  const { data: profile, error, isLoading } = useGetProfileQuery()
+  const { id } = useParams()
+  const { data: profile, error, isLoading } = useGetUserByIdQuery(id)
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
 
-  const {
-    data: currentUser,
-    error: currentUserError,
-    isLoading: isCurrentUserLoading,
-  } = useGetCurrentUserQuery()
+  const navigate = useNavigate()
 
-  // console.log(currentUser)
+  // console.log(profile)
 
   const [open, setOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
-  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: {
@@ -110,7 +105,7 @@ const Profile = () => {
       try {
         if (profile?._id) {
           await updateProfile({ _id: profile._id, ...values }).unwrap()
-          setOpen(false) // Close the dialog on success
+          setOpen(false)
         } else {
           console.error('User ID (_id) is missing')
         }
@@ -125,8 +120,7 @@ const Profile = () => {
     try {
       if (profile?._id) {
         await deleteUser({ id: profile._id }).unwrap()
-        localStorage.removeItem('token')
-        navigate('../auth')
+        navigate('/users')
       } else {
         console.error('User ID (_id) is missing')
       }
@@ -135,10 +129,10 @@ const Profile = () => {
     }
   }
 
-  // if (isLoading) return <CircularProgress />
-  // if (error) {
-  //   return <div>Error: {error.message}</div>
-  // }
+  if (isLoading) return <CircularProgress />
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
   if (!profile) return null
 
   return (
@@ -171,6 +165,14 @@ const Profile = () => {
 
       {/* BUTTONS */}
       <div className={css.profileButtons}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate('/users/userslist')}
+        >
+          <KeyboardBackspaceIcon />
+          Back
+        </Button>
         <Button onClick={() => setOpen(true)} variant="contained" color="info">
           Edit profile
         </Button>
@@ -179,9 +181,9 @@ const Profile = () => {
           onClick={() => setConfirmDelete(true)}
           variant="contained"
           color="warning"
-          disabled={currentUser._id === '668bb855d7035d795911dfcc'}
+          disabled={profile.isAdmin === true}
         >
-          {currentUser._id !== '668bb855d7035d795911dfcc'
+          {profile._id !== '668bb855d7035d795911dfcc'
             ? 'Delete profile'
             : 'Undeletable profile(super admin)'}
         </Button>
@@ -330,7 +332,7 @@ const Profile = () => {
         <DialogTitle id="confirm-delete-dialog">Confirm Delete</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete your profile? This action cannot be
+            Are you sure you want to delete this profile? This action cannot be
             undone.
           </Typography>
         </DialogContent>
@@ -347,4 +349,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default UsersProfile

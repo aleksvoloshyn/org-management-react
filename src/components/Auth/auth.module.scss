@@ -1,9 +1,14 @@
 .auth {
   display: flex;
   justify-content: center;
-  padding: 50px;
+  padding: 8px;
   background: url('./../../assets/authInBg3.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100%;
+}
+@media (min-width: 320px) and (max-width: 426px) {
+  .auth {
+    background: none;
+  }
 }

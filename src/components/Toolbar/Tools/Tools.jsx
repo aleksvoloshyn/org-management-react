@@ -12,6 +12,7 @@ import css from './tools.module.scss'
 const Tools = () => {
   const location = useLocation()
   const [currentPage, setCurrentPage] = useState(location.pathname.slice(1))
+  // console.log(location.pathname)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -30,13 +31,15 @@ const Tools = () => {
       console.error('Failed to logout:', error)
     }
   }
-
   useEffect(() => {
-    setCurrentPage(
-      location.pathname.includes('/')
-        ? location.pathname.split('/').pop()
-        : location.pathname
-    )
+    const pathname = location.pathname
+    const paths = ['/users/userslist', '/companies', '/profile']
+
+    if (paths.includes(pathname)) {
+      setCurrentPage(pathname.split('/').pop())
+    } else {
+      setCurrentPage('')
+    }
   }, [location.pathname])
   return (
     <div className={css.tools}>

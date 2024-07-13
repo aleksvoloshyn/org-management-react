@@ -3,9 +3,13 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  height: 100vh;
+  /* height: 100vh; */
 }
-
+@media (min-width: 320px) and (max-width: 426px) {
+  #root {
+    padding: 0;
+  }
+}
 .logo {
   height: 6em;
   padding: 1.5em;

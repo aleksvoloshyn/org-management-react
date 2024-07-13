@@ -1,16 +1,8 @@
-.profile {
-  display: flex;
-}
-.profileLabel {
-  padding-top: 10px;
-}
-
-.profileWrapper {
+.profilePage {
+  height: inherit;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
-
 .profileButtons {
   display: flex;
   justify-content: center;
