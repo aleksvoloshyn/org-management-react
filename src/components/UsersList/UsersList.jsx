@@ -222,7 +222,7 @@ const UsersList = () => {
                   <IconButton
                     onClick={() => handleEditClick(user)}
                     sx={{ color: blue[600] }}
-                    disabled={user.token !== currentUserToken && user.isAdmin}
+                    // disabled={user.token !== currentUserToken && user.isAdmin}
                   >
                     <EditIcon />
                   </IconButton>

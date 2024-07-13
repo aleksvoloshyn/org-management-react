@@ -181,7 +181,7 @@ const UsersProfile = () => {
           onClick={() => setConfirmDelete(true)}
           variant="contained"
           color="warning"
-          disabled={profile._id === '668bb855d7035d795911dfcc'}
+          disabled={profile.isAdmin === true}
         >
           {profile._id !== '668bb855d7035d795911dfcc'
             ? 'Delete profile'
