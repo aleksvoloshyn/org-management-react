@@ -1,10 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
-import {
-  useGetCompanyByIdQuery,
-  useUpdateCompanyMutation,
-  useDeleteCompanyMutation,
-} from '../../redux/companiesApi'
+import { useGetCompanyByIdQuery } from '../../redux/companiesApi'
 import {
   CircularProgress,
   Typography,
@@ -23,80 +18,26 @@ import {
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
-import * as Yup from 'yup'
-import { useFormik } from 'formik'
+
+import { useCompanyHandlers } from './companyHandlers'
+import { modalBoxStyle, editCompanyFormStyle } from './companyStyles'
 
 const CompanyDetails = () => {
   const { id } = useParams()
-  const navigate = useNavigate()
   const { data: company, error, isLoading } = useGetCompanyByIdQuery(id)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [modalError, setModalError] = useState(null)
-  const [openEditModal, setOpenEditModal] = useState(false)
-  const [updateCompany] = useUpdateCompanyMutation()
-  const [deleteCompany] = useDeleteCompanyMutation()
+  const {
+    deleteDialogOpen,
+    modalError,
+    openEditModal,
+    handleCloseEditModal,
+    handleDeleteDialogOpen,
+    handleDeleteDialogClose,
+    handleEditClick,
+    handleDeleteClick,
+    formikEdit,
+  } = useCompanyHandlers(id, company)
 
-  const handleOpenEditModal = () => setOpenEditModal(true)
-  const handleCloseEditModal = () => {
-    setOpenEditModal(false)
-    setModalError(null)
-  }
-
-  const handleDeleteDialogOpen = () => setDeleteDialogOpen(true)
-  const handleDeleteDialogClose = () => setDeleteDialogOpen(false)
-
-  const handleEditClick = () => {
-    formikEdit.setValues({
-      name: company.name,
-      address: company.address,
-      serviceOfActivity: company.serviceOfActivity,
-      numberOfEmployees: company.numberOfEmployees,
-      description: company.description,
-      type: company.type,
-    })
-    handleOpenEditModal()
-  }
-
-  const handleDeleteClick = async () => {
-    try {
-      await deleteCompany(id).unwrap()
-      handleDeleteDialogClose()
-      navigate('/companies')
-    } catch (err) {
-      console.error('Failed to delete company:', err)
-    }
-  }
-
-  const formikEdit = useFormik({
-    initialValues: {
-      name: '',
-      address: '',
-      serviceOfActivity: '',
-      numberOfEmployees: '',
-      description: '',
-      type: '',
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required('Required'),
-      address: Yup.string().required('Required'),
-      serviceOfActivity: Yup.string().required('Required'),
-      numberOfEmployees: Yup.string().required('Required'),
-      description: Yup.string().required('Required'),
-      type: Yup.string().required('Required'),
-    }),
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        await updateCompany({ id, ...values }).unwrap()
-        resetForm()
-        handleCloseEditModal()
-      } catch (err) {
-        setModalError('Failed to save company')
-        console.error('Failed to save company:', err)
-      }
-    },
-    enableReinitialize: true,
-  })
-
+  const navigate = useNavigate()
   if (isLoading) return <CircularProgress />
   if (error) return <Typography color="error">Error loading company</Typography>
 
@@ -145,7 +86,6 @@ const CompanyDetails = () => {
             Back
           </Button>
           <span>
-            {' '}
             <IconButton onClick={handleEditClick} sx={{ color: 'blue' }}>
               <EditIcon />
             </IconButton>
@@ -287,23 +227,6 @@ const CompanyDetails = () => {
       </Modal>
     </Box>
   )
-}
-
-const modalBoxStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-}
-
-const editCompanyFormStyle = {
-  display: 'flex',
-  flexDirection: 'column',
 }
 
 export default CompanyDetails
