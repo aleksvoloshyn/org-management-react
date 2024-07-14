@@ -40,4 +40,7 @@ export const useStyles = makeStyles((theme) => ({
   textField: {
     marginBottom: theme.spacing(2),
   },
+  red: {
+    color: 'red',
+  },
 }))

@@ -13,6 +13,8 @@ import {
   Typography,
   Card,
   CardContent,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material'
 import { useFormik } from 'formik'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -24,6 +26,8 @@ import {
   useGetUserByIdQuery,
   useUpdateProfileMutation,
   useDeleteUserMutation,
+  useGetCurrentUserQuery,
+  useSetAdminRightsMutation,
 } from '../../redux/usersApi'
 import userPic from './../../assets/userpic.png'
 import css from './usersProfile.module.scss'
@@ -32,12 +36,17 @@ const UsersProfile = () => {
   const classes = useStyles()
   const { id } = useParams()
   const { data: profile, error, isLoading } = useGetUserByIdQuery(id)
+  const { data: currentUser } = useGetCurrentUserQuery()
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+  const [setAdminRights, { isLoading: isSettingAdmin }] =
+    useSetAdminRightsMutation()
   const navigate = useNavigate()
 
   const [open, setOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [confirmAdmin, setConfirmAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(profile?.isAdmin || false)
 
   const formik = useFormik({
     initialValues: {
@@ -53,6 +62,20 @@ const UsersProfile = () => {
     onSubmit: (values) => handleSubmit(values, profile, updateProfile, setOpen),
     enableReinitialize: true,
   })
+
+  const handleAdminChange = async () => {
+    setConfirmAdmin(true)
+  }
+
+  const handleConfirmAdminChange = async () => {
+    setConfirmAdmin(false)
+    try {
+      await setAdminRights({ id: profile._id, isAdmin: !isAdmin })
+      setIsAdmin(!isAdmin)
+    } catch (error) {
+      console.error('Ошибка при обновлении админ прав:', error)
+    }
+  }
 
   if (isLoading) return <CircularProgress />
   if (error) {
@@ -101,6 +124,22 @@ const UsersProfile = () => {
         <Button onClick={() => setOpen(true)} variant="contained" color="info">
           Edit profile
         </Button>
+
+        {currentUser && currentUser._id === '668bb855d7035d795911dfcc' && (
+          <FormControlLabel
+            className={classes.red}
+            control={
+              <Checkbox
+                checked={profile.isAdmin}
+                onChange={handleAdminChange}
+                color="error"
+                className={classes.red}
+                disabled={profile._id === '668bb855d7035d795911dfcc'}
+              />
+            }
+            label="Admin rights"
+          />
+        )}
 
         <Button
           onClick={() => setConfirmDelete(true)}
@@ -271,6 +310,36 @@ const UsersProfile = () => {
             disabled={isDeleting}
           >
             {isDeleting ? <CircularProgress size={24} /> : 'Delete'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* CONFIRM ADMIN RIGHTS DIALOG */}
+      <Dialog
+        open={confirmAdmin}
+        onClose={() => setConfirmAdmin(false)}
+        aria-labelledby="confirm-admin-dialog"
+      >
+        <DialogTitle id="confirm-admin-dialog">
+          Confirm Admin Rights
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            {`Are you sure you want to ${
+              isAdmin ? 'remove' : 'grant'
+            } admin rights?`}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmAdmin(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmAdminChange}
+            color="primary"
+            disabled={isSettingAdmin}
+          >
+            {isSettingAdmin ? <CircularProgress size={24} /> : 'Confirm'}
           </Button>
         </DialogActions>
       </Dialog>

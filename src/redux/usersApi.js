@@ -54,6 +54,15 @@ export const usersApi = createApi({
       }),
       invalidatesTags: ['UserProfile', 'UserList'],
     }),
+    // SET ADMIN RIGHTS
+    setAdminRights: builder.mutation({
+      query: ({ id, isAdmin }) => ({
+        url: `${id}/isAdmin`,
+        method: 'PATCH',
+        body: { isAdmin },
+      }),
+      invalidatesTags: ['UserProfile', 'UserList'],
+    }),
   }),
 })
 
@@ -64,4 +73,5 @@ export const {
   useUpdateProfileMutation,
   useDeleteUserMutation,
   useGetUserByIdQuery,
+  useSetAdminRightsMutation,
 } = usersApi
