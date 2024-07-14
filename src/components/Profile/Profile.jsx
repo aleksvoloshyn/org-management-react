@@ -14,136 +14,41 @@ import {
   Card,
   CardContent,
 } from '@mui/material'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
+
 import {
   useGetProfileQuery,
-  useUpdateProfileMutation,
-  useDeleteUserMutation,
   useGetCurrentUserQuery,
 } from '../../redux/usersApi'
 
-import { useNavigate } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
 import userPic from './../../assets/userpic.png'
+import useStyles from './profileStyles'
+import { useProfileHandlers } from './profileHandlers'
 import css from './profile.module.scss'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '50px',
-    width: '60%',
-    height: '100%',
-    margin: '20px auto',
-    padding: theme.spacing(3),
-    textAlign: 'center',
-    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
-    borderRadius: theme.shape.borderRadius,
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    marginBottom: theme.spacing(1),
-  },
-  info: {
-    fontSize: '1rem',
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
-    '&:last-child': {
-      marginBottom: 0,
-    },
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
-  dialogContent: {
-    padding: theme.spacing(3),
-  },
-  dialogForm: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-  },
-  textField: {
-    marginBottom: theme.spacing(2),
-  },
-}))
 
 const Profile = () => {
   const classes = useStyles()
   const { data: profile, error, isLoading } = useGetProfileQuery()
-  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
-  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+  const { data: currentUser } = useGetCurrentUserQuery()
 
   const {
-    data: currentUser,
-    error: currentUserError,
-    isLoading: isCurrentUserLoading,
-  } = useGetCurrentUserQuery()
+    open,
+    confirmDelete,
+    isUpdating,
+    isDeleting,
+    formik,
+    handleOpen,
+    handleClose,
+    handleConfirmDeleteOpen,
+    handleConfirmDeleteClose,
+    handleDelete,
+  } = useProfileHandlers(profile)
 
-  // console.log(currentUser)
-
-  const [open, setOpen] = useState(false)
-  const [confirmDelete, setConfirmDelete] = useState(false)
-  const navigate = useNavigate()
-
-  const formik = useFormik({
-    initialValues: {
-      first_name: profile?.first_name || '',
-      last_name: profile?.last_name || '',
-      nick_name: profile?.nick_name || '',
-      description: profile?.description || '',
-      position: profile?.position || '',
-      email: profile?.email || '',
-      phone_number: profile?.phone_number || '',
-    },
-    validationSchema: Yup.object({
-      first_name: Yup.string().required('First name is required'),
-      last_name: Yup.string().required('Last name is required'),
-      email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-      phone_number: Yup.string().required('Phone number is required'),
-    }),
-    onSubmit: async (values) => {
-      try {
-        if (profile?._id) {
-          await updateProfile({ _id: profile._id, ...values }).unwrap()
-          setOpen(false) // Close the dialog on success
-        } else {
-          console.error('User ID (_id) is missing')
-        }
-      } catch (error) {
-        console.error('Failed to update profile', error)
-      }
-    },
-    enableReinitialize: true,
-  })
-
-  const handleDelete = async () => {
-    try {
-      if (profile?._id) {
-        await deleteUser({ id: profile._id }).unwrap()
-        localStorage.removeItem('token')
-        navigate('../auth')
-      } else {
-        console.error('User ID (_id) is missing')
-      }
-    } catch (error) {
-      console.error('Failed to delete profile', error)
-    }
-  }
-
-  // if (isLoading) return <CircularProgress />
-  // if (error) {
-  //   return <div>Error: {error.message}</div>
-  // }
+  if (isLoading) return <CircularProgress />
+  if (error) return <Typography color="error">Error loading profile</Typography>
   if (!profile) return null
 
   return (
     <div className={css.profileWrapper}>
-      {/* CARD */}
       <Card className={classes.root}>
         <img src={userPic} alt="userPic" width={60} height={80} />
         <CardContent>
@@ -169,28 +74,25 @@ const Profile = () => {
         </CardContent>
       </Card>
 
-      {/* BUTTONS */}
       <div className={css.profileButtons}>
-        <Button onClick={() => setOpen(true)} variant="contained" color="info">
+        <Button onClick={handleOpen} variant="contained" color="info">
           Edit profile
         </Button>
-
         <Button
-          onClick={() => setConfirmDelete(true)}
+          onClick={handleConfirmDeleteOpen}
           variant="contained"
           color="warning"
-          disabled={currentUser._id === '668bb855d7035d795911dfcc'}
+          disabled={currentUser?._id === '668bb855d7035d795911dfcc'}
         >
-          {currentUser._id !== '668bb855d7035d795911dfcc'
+          {currentUser?._id !== '668bb855d7035d795911dfcc'
             ? 'Delete profile'
             : 'Undeletable profile(super admin)'}
         </Button>
       </div>
 
-      {/* EDIT FORM */}
       <Dialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Update Profile</DialogTitle>
@@ -310,7 +212,7 @@ const Profile = () => {
               </Grid>
             </Grid>
             <DialogActions>
-              <Button onClick={() => setOpen(false)} color="secondary">
+              <Button onClick={handleClose} color="secondary">
                 Cancel
               </Button>
               <Button type="submit" color="primary" disabled={isUpdating}>
@@ -321,10 +223,9 @@ const Profile = () => {
         </DialogContent>
       </Dialog>
 
-      {/* CONFIRM DELETE DIALOG */}
       <Dialog
         open={confirmDelete}
-        onClose={() => setConfirmDelete(false)}
+        onClose={handleConfirmDeleteClose}
         aria-labelledby="confirm-delete-dialog"
       >
         <DialogTitle id="confirm-delete-dialog">Confirm Delete</DialogTitle>
@@ -335,7 +236,7 @@ const Profile = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDelete(false)} color="secondary">
+          <Button onClick={handleConfirmDeleteClose} color="secondary">
             Cancel
           </Button>
           <Button onClick={handleDelete} color="warning" disabled={isDeleting}>

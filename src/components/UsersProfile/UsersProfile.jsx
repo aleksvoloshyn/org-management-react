@@ -13,75 +13,40 @@ import {
   Typography,
   Card,
   CardContent,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
+import { useNavigate, useParams } from 'react-router-dom'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
+import { useStyles } from './styles'
+import { validationSchema } from './validationSchema'
+import { handleDelete, handleSubmit } from './handlers'
 import {
   useGetUserByIdQuery,
   useUpdateProfileMutation,
   useDeleteUserMutation,
+  useGetCurrentUserQuery,
+  useSetAdminRightsMutation,
 } from '../../redux/usersApi'
-import { useNavigate, useParams } from 'react-router-dom'
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
-import { makeStyles } from '@material-ui/core/styles'
 import userPic from './../../assets/userpic.png'
 import css from './usersProfile.module.scss'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '50px',
-    width: '60%',
-    height: '100%',
-    margin: '20px auto',
-    padding: theme.spacing(3),
-    textAlign: 'center',
-    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
-    borderRadius: theme.shape.borderRadius,
-  },
-  title: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    marginBottom: theme.spacing(1),
-  },
-  info: {
-    fontSize: '1rem',
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
-    '&:last-child': {
-      marginBottom: 0,
-    },
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
-  dialogContent: {
-    padding: theme.spacing(3),
-  },
-  dialogForm: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-  },
-  textField: {
-    marginBottom: theme.spacing(2),
-  },
-}))
 
 const UsersProfile = () => {
   const classes = useStyles()
   const { id } = useParams()
   const { data: profile, error, isLoading } = useGetUserByIdQuery(id)
+  const { data: currentUser } = useGetCurrentUserQuery()
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation()
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
-
+  const [setAdminRights, { isLoading: isSettingAdmin }] =
+    useSetAdminRightsMutation()
   const navigate = useNavigate()
-
-  // console.log(profile)
 
   const [open, setOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [confirmAdmin, setConfirmAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(profile?.isAdmin || false)
 
   const formik = useFormik({
     initialValues: {
@@ -93,39 +58,22 @@ const UsersProfile = () => {
       email: profile?.email || '',
       phone_number: profile?.phone_number || '',
     },
-    validationSchema: Yup.object({
-      first_name: Yup.string().required('First name is required'),
-      last_name: Yup.string().required('Last name is required'),
-      email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-      phone_number: Yup.string().required('Phone number is required'),
-    }),
-    onSubmit: async (values) => {
-      try {
-        if (profile?._id) {
-          await updateProfile({ _id: profile._id, ...values }).unwrap()
-          setOpen(false)
-        } else {
-          console.error('User ID (_id) is missing')
-        }
-      } catch (error) {
-        console.error('Failed to update profile', error)
-      }
-    },
+    validationSchema,
+    onSubmit: (values) => handleSubmit(values, profile, updateProfile, setOpen),
     enableReinitialize: true,
   })
 
-  const handleDelete = async () => {
+  const handleAdminChange = async () => {
+    setConfirmAdmin(true)
+  }
+
+  const handleConfirmAdminChange = async () => {
+    setConfirmAdmin(false)
     try {
-      if (profile?._id) {
-        await deleteUser({ id: profile._id }).unwrap()
-        navigate('/users')
-      } else {
-        console.error('User ID (_id) is missing')
-      }
+      await setAdminRights({ id: profile._id, isAdmin: !isAdmin })
+      setIsAdmin(!isAdmin)
     } catch (error) {
-      console.error('Failed to delete profile', error)
+      console.error('Ошибка при обновлении админ прав:', error)
     }
   }
 
@@ -176,6 +124,22 @@ const UsersProfile = () => {
         <Button onClick={() => setOpen(true)} variant="contained" color="info">
           Edit profile
         </Button>
+
+        {currentUser && currentUser._id === '668bb855d7035d795911dfcc' && (
+          <FormControlLabel
+            className={classes.red}
+            control={
+              <Checkbox
+                checked={profile.isAdmin}
+                onChange={handleAdminChange}
+                color="error"
+                className={classes.red}
+                disabled={profile._id === '668bb855d7035d795911dfcc'}
+              />
+            }
+            label="Admin rights"
+          />
+        )}
 
         <Button
           onClick={() => setConfirmDelete(true)}
@@ -340,8 +304,42 @@ const UsersProfile = () => {
           <Button onClick={() => setConfirmDelete(false)} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="warning" disabled={isDeleting}>
+          <Button
+            onClick={() => handleDelete(profile, deleteUser, navigate)}
+            color="warning"
+            disabled={isDeleting}
+          >
             {isDeleting ? <CircularProgress size={24} /> : 'Delete'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* CONFIRM ADMIN RIGHTS DIALOG */}
+      <Dialog
+        open={confirmAdmin}
+        onClose={() => setConfirmAdmin(false)}
+        aria-labelledby="confirm-admin-dialog"
+      >
+        <DialogTitle id="confirm-admin-dialog">
+          Confirm Admin Rights
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            {`Are you sure you want to ${
+              isAdmin ? 'remove' : 'give'
+            } admin rights?`}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmAdmin(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleConfirmAdminChange}
+            color="primary"
+            disabled={isSettingAdmin}
+          >
+            {isSettingAdmin ? <CircularProgress size={24} /> : 'Confirm'}
           </Button>
         </DialogActions>
       </Dialog>
