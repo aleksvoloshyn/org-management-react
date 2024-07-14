@@ -326,7 +326,7 @@ const UsersProfile = () => {
         <DialogContent>
           <Typography>
             {`Are you sure you want to ${
-              isAdmin ? 'remove' : 'grant'
+              isAdmin ? 'remove' : 'give'
             } admin rights?`}
           </Typography>
         </DialogContent>
